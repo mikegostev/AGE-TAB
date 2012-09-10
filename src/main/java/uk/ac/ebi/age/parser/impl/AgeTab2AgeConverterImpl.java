@@ -9,9 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ebi.age.authz.ACR.Permit;
-import uk.ac.ebi.age.authz.PermissionManager;
-import uk.ac.ebi.age.ext.authz.SystemAction;
 import uk.ac.ebi.age.ext.log.LogNode;
 import uk.ac.ebi.age.ext.log.LogNode.Level;
 import uk.ac.ebi.age.model.AgeAttributeClass;
@@ -19,7 +16,6 @@ import uk.ac.ebi.age.model.AgeAttributeClassPlug;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeExternalRelation;
 import uk.ac.ebi.age.model.AgeObjectAttribute;
-import uk.ac.ebi.age.model.AgeObjectProperty;
 import uk.ac.ebi.age.model.AgePropertyClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AttributeClassRef;
@@ -29,6 +25,7 @@ import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.DataType;
 import uk.ac.ebi.age.model.FormatException;
 import uk.ac.ebi.age.model.IdScope;
+import uk.ac.ebi.age.model.PropertyClassRef;
 import uk.ac.ebi.age.model.RelationClassRef;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeAttributeClassWritable;
@@ -54,12 +51,10 @@ import uk.ac.ebi.age.parser.SyntaxProfileDefinition;
 
 public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 {
- private final PermissionManager permissionManager;
  private final SyntaxProfile syntaxProfile;
  
- public AgeTab2AgeConverterImpl( PermissionManager pMngr, SyntaxProfile syntaxProfile )
+ public AgeTab2AgeConverterImpl( SyntaxProfile syntaxProfile )
  {
-  permissionManager = pMngr;
   this.syntaxProfile=syntaxProfile;
  }
  
@@ -362,30 +357,22 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
  {
   if( colHdr.isCustom() )
   {
-   if( permissionManager.checkSystemPermission(SystemAction.CUSTCLASSDEF) == Permit.ALLOW )
+   AgeClass parent = null;
+
+   if( colHdr.getParentClass() != null )
    {
-    AgeClass parent = null;
-    
-    if( colHdr.getParentClass() != null )
+    parent = sm.getDefinedAgeClass(colHdr.getParentClass());
+
+    if( parent == null )
     {
-     parent = sm.getDefinedAgeClass(colHdr.getParentClass());
-     
-     if( parent == null )
-     {
-      blkLog.log(Level.ERROR, "Defined class '"+colHdr.getParentClass()+"' (used as superclass) is not found. Row: "+colHdr.getRow()+" Col: "+colHdr.getCol() );
+     blkLog.log(Level.ERROR, "Defined class '"+colHdr.getParentClass()+"' (used as superclass) is not found. Row: "+colHdr.getRow()+" Col: "+colHdr.getCol() );
 
-      return null;
-     }
+     return null;
     }
-     
-    return sm.getOrCreateCustomAgeClass(colHdr.getName(), null, parent);
    }
-   else
-   {
-    blkLog.log(Level.ERROR, "Custom classes are not allowed within this context. Row: "+colHdr.getRow()+" Col: "+colHdr.getCol());
 
-    return null;
-   }
+   return sm.getOrCreateCustomAgeClass(colHdr.getName(), null, parent);
+
   }
   else
   {
@@ -661,12 +648,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
  
  private AgeAttributeClass getCustomAttributeClass( ClassReference cr , AgeClass aCls, ContextSemanticModel sm, LogNode log)
  {
-   if(permissionManager.checkSystemPermission(SystemAction.CUSTATTRCLASSDEF) != Permit.ALLOW)
-   {
-    log.log(Level.ERROR, "Custom attribure class (" + cr.getName() + ") is not allowed within this context. Row: "+cr.getRow()+" Col: "+cr.getCol() );
-    return null;
-   }
-   
+
    AgeAttributeClass attrClass = sm.getCustomAgeAttributeClass(cr.getName(), aCls);
 
    String typeName = cr.getFlagValue(AgeTabSyntaxParser.typeFlag);
@@ -1065,11 +1047,6 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    
    if( rgHdr != null )
    {
-    if( permissionManager.checkSystemPermission(SystemAction.CUSTRELCLASSDEF) != Permit.ALLOW )
-    {
-     log.log(Level.ERROR, "Custom relation class ("+attHd.getName()+") is not allowed within this context. Row: "+attHd.getRow()+" Col: "+attHd.getCol());
-     return null;
-    }
      
     AgeClass rangeClass=null;
   
@@ -1116,12 +1093,6 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    } //no range flag, i.e. attribute ref
    else
    {
-    if( permissionManager.checkSystemPermission(qualf?SystemAction.CUSTQUALCLASSDEF:SystemAction.CUSTATTRCLASSDEF) != Permit.ALLOW )
-    {
-     log.log(Level.ERROR, "Custom "+(qualf?"qualifier":"attribute")+" class ("+attHd.getName()+") is not allowed within this context. Row: "+attHd.getRow()+" Col: "+attHd.getCol());
-     return null;
-    }
-
     AgeAttributeClass attrClass = getCustomAttributeClass(attHd, blkOwner, sm, log);
     
     if( attrClass == null )
@@ -1288,9 +1259,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     chain.add(cEl);
    }
    
-   if( attHd.getEmbeddedClassRef() != null && ((AttributeClassRef)cEl.elClassRef).getAttributeClass().getDataType() != DataType.OBJECT )
+   if( attHd.getEmbeddedClassRef() != null && ((AttributeClassRef)cEl.elClassRef).getAgeElClass().getDataType() != DataType.OBJECT )
    {
-    log.log(Level.ERROR, "Object qualifier class expected instead of '" + ((AttributeClassRef)cEl.elClassRef).getAttributeClass().getName()+"'");
+    log.log(Level.ERROR, "Object qualifier class expected instead of '" + ((AttributeClassRef)cEl.elClassRef).getAgeElClass().getName()+"'");
     return false;
    }
 
@@ -1313,7 +1284,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    colHdr=hd;
   }
 
-  abstract public AgePropertyClass getProperty();
+  abstract public AgePropertyClass getPropertyClass();
 
   public abstract void convert(AgeTabValue vls) throws ConvertionException;
 
@@ -1336,7 +1307,11 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    return lastProp;
   }
   
-
+  ValueConverter getHostConvertor()
+  {
+   return null;
+  }
+  
   protected static AgeFileAttributeWritable convertFileValue(AgeTabValue atVal, AttributeClassRef classRef,  SyntaxProfileDefinition profDef, AttributedWritable prop)
   {
    if(atVal == null )
@@ -1608,7 +1583,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
    return relClass;
   }
@@ -1656,7 +1631,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    if( obj.getAttributes() != null )
    {
     for( AgeAttributeWritable a : obj.getAttributes() )
-     if( a.getAgeElClass() == classRef.getAttributeClass() )
+     if( a.getAgeElClass() == classRef.getAgeElClass() )
       obj.removeAttribute(a);
    }
 
@@ -1683,9 +1658,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
-   return classRef.getAttributeClass();
+   return classRef.getAgeElClass();
   }
   
 //  public AgeClassProperty getQualifiedProperty()
@@ -1718,7 +1693,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    if( obj.getAttributes() != null )
    {
     for( AgeAttributeWritable a : obj.getAttributes() )
-     if( a.getAgeElClass() == classRef.getAttributeClass() )
+     if( a.getAgeElClass() == classRef.getAgeElClass() )
       obj.removeAttribute(a);
    }
 
@@ -1783,9 +1758,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
-   return classRef.getAttributeClass();
+   return classRef.getAgeElClass();
   }
   
  }
@@ -1840,7 +1815,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
    return relClass;
   }
@@ -1871,7 +1846,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
 
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
    return null;
   }
@@ -1894,7 +1869,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
    return null;
   }
@@ -1932,7 +1907,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    if( obj.getAttributes() != null )
    {
     for( AgeAttributeWritable a : obj.getAttributes() )
-     if( a.getAgeElClass() == classRef.getAttributeClass() )
+     if( a.getAgeElClass() == classRef.getAgeElClass() )
       obj.removeAttribute(a);
    }
    
@@ -1944,7 +1919,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   {
    if( vl == null || vl.getValue().length() == 0 )
    {
-    if( classRef.getAttributeClass().getDataType().isMultiline() )
+    if( classRef.getAgeElClass().getDataType().isMultiline() )
     {
      AgeAttributeWritable attr = (AgeAttributeWritable)getLastConvertedProperty();
      
@@ -1964,9 +1939,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    
    AgeAttributeWritable attr = null;
    
-   if( classRef.getAttributeClass().getDataType().isMultiline() )
+   if( classRef.getAgeElClass().getDataType().isMultiline() )
    {
-    List<? extends AgeAttributeWritable> atcoll = hostObject.getAttributesByClass(classRef.getAttributeClass(), false);
+    List<? extends AgeAttributeWritable> atcoll = hostObject.getAttributesByClass(classRef.getAgeElClass(), false);
     
     if( atcoll == null || atcoll.size() == 0 )
      attr = hostObject.createAgeAttribute(classRef);
@@ -1982,7 +1957,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    catch(FormatException e)
    {
-    throw new ConvertionException(vl.getRow(), vl.getCol(), "Invalid value ("+vl.getValue()+") for attribute: "+classRef.getAttributeClass().getName() );
+    throw new ConvertionException(vl.getRow(), vl.getCol(), "Invalid value ("+vl.getValue()+") for attribute: "+classRef.getAgeElClass().getName() );
    }
    
    
@@ -1990,9 +1965,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
   
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
-   return classRef.getAttributeClass();
+   return classRef.getAgeElClass();
   }
   
 //  public AgeClassProperty getQualifiedProperty()
@@ -2018,27 +1993,47 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
   }
 
   
+  @Override
   public ValueConverter getHostConvertor()
   {
    return hostConverter;
   }
   
   @Override
+  public AgePropertyClass getPropertyClass()
+  {
+   return classRef.getAgeElClass();
+  }
+  
+  @Override
+  protected AttributedWritable getLastConvertedProperty()
+  {
+   if( contextProperty == hostConverter.getLastConvertedProperty() )
+    return super.getLastConvertedProperty();
+   
+   return null;
+  }
+
+  
+  
+  @Override
   public void resetObject( AgeObjectWritable obj )
+  {}
+
+  // Не могу вспомнить, зачем мне понадобилось это делать. По идее hostConverter должен удалить вcе отношения... Зачем тогда удалять квалификаторы!
+  // Заменил на пустой resetObject
+  public void resetObjectX( AgeObjectWritable obj )
   {
    List<AgeAttributeClass> chain = new ArrayList<AgeAttributeClass>(5);
    
-   chain.add(classRef.getAttributeClass());
+   chain.add(classRef.getAgeElClass());
    
    ValueConverter cHost = getHostConvertor();
    
-   while( cHost instanceof QualifierConvertor )
-   {
-    chain.add( (AgeAttributeClass)cHost.getProperty() );
-    cHost = ((QualifierConvertor)cHost).getHostConvertor();
-   }
+   while( cHost.getHostConvertor() != null )
+    chain.add( (AgeAttributeClass)cHost.getPropertyClass() );
 
-   AgePropertyClass topProp = cHost.getProperty();
+   AgePropertyClass topProp = cHost.getPropertyClass();
    
    if( topProp instanceof AgeRelationClass && obj.getRelations() != null )
    {
@@ -2051,21 +2046,6 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    
   }
   
-  @Override
-  public AgePropertyClass getProperty()
-  {
-   return classRef.getAttributeClass();
-  }
-
-  @Override
-  protected AttributedWritable getLastConvertedProperty()
-  {
-   if( contextProperty == hostConverter.getLastConvertedProperty() )
-    return super.getLastConvertedProperty();
-   
-   return null;
-  }
-
   
   private void removeQualifiers( AttributedWritable host, List<AgeAttributeClass> chain, int lvl )
   {
@@ -2099,7 +2079,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
    if(val == null || val.getValue().length() == 0)
    {
-    if( classRef.getAttributeClass().getDataType().isMultiline() && getLastConvertedProperty() != null )
+    if( classRef.getAgeElClass().getDataType().isMultiline() && getLastConvertedProperty() != null )
     {
      try
      {
@@ -2120,7 +2100,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
    AgeAttributeWritable attrAlt = null;
 
-   if(classRef.getAttributeClass().getDataType().isMultiline())
+   if(classRef.getAgeElClass().getDataType().isMultiline())
     attrAlt = (AgeAttributeWritable)getLastConvertedProperty();
    
    if( attrAlt == null )
@@ -2133,7 +2113,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    catch(FormatException e)
    {
     throw new ConvertionException(val.getRow(), val.getCol(), "Invalid value (" + val.getValue() + ") for attribute: "
-      + classRef.getAttributeClass().getName());
+      + classRef.getAgeElClass().getName());
    }
 
    
@@ -2229,7 +2209,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    
    ELTYPE elType;
-   Object elClassRef;
+   PropertyClassRef elClassRef;
    Object range;
   }
 
@@ -2254,9 +2234,9 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
 
   @Override
-  public AgePropertyClass getProperty()
+  public AgePropertyClass getPropertyClass()
   {
-   return ((AgeObjectProperty)chain.get(chain.size()-1).elClassRef).getAgeElClass();
+   return chain.get(0).elClassRef.getAgeElClass();
   }
 
   @SuppressWarnings("unchecked")
@@ -2321,7 +2301,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     
     if( level == 0 && chain.get(i+1).elType != ChainElement.ELTYPE.QUALIFIER ) //taking object attribute/qualifier on the top level. Relations can't be here
     {
-     AgeAttributeClass cls = ((AttributeClassRef)ce.elClassRef).getAttributeClass();
+     AgeAttributeClass cls = ((AttributeClassRef)ce.elClassRef).getAgeElClass();
      
      List<? extends AgeAttributeWritable> attrs = attrHost.getAttributesByClass(cls, false);
      
@@ -2344,7 +2324,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     }
     else if( ce.elType == ChainElement.ELTYPE.RELATION )
     {
-     List< ? extends AgeRelationWritable> rels = ((AgeObjectWritable) attrHost).getRelationsByClass(((RelationClassRef) ce.elClassRef).getAgeRelationClass(), false);
+     List< ? extends AgeRelationWritable> rels = ((AgeObjectWritable) attrHost).getRelationsByClass(((RelationClassRef) ce.elClassRef).getAgeElClass(), false);
 
      if(rels != null && rels.size() > 0)
       pathProp = rels.get(rels.size() - 1);
@@ -2353,7 +2333,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     }
     else
     {
-     AgeAttributeClass cls = ((AttributeClassRef) ce.elClassRef).getAttributeClass();
+     AgeAttributeClass cls = ((AttributeClassRef) ce.elClassRef).getAgeElClass();
 
      List< ? extends AgeAttributeWritable> attrs = attrHost.getAttributesByClass(cls, false);
 
@@ -2371,7 +2351,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     convertRelationValue(vls, (RelationClassRef)lastEl.elClassRef, profileDef, (AgeObjectWritable)attrHost, (Collection< Map<String,AgeObjectWritable> >)lastEl.range);
    else
    {
-    AgeAttributeClass cls = ((AttributeClassRef)lastEl.elClassRef).getAttributeClass();
+    AgeAttributeClass cls = ((AttributeClassRef)lastEl.elClassRef).getAgeElClass();
     
     if( cls.getDataType() == DataType.OBJECT )
      convertObjectValue(vls, (AttributeClassRef)lastEl.elClassRef, profileDef, attrHost, (Map<String,AgeObjectWritable>)lastEl.range);

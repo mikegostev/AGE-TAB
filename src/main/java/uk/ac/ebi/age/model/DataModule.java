@@ -2,9 +2,9 @@ package uk.ac.ebi.age.model;
 
 import java.util.Collection;
 
+import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.ext.entity.Entity;
 import uk.ac.ebi.age.model.writable.AgeFileAttributeWritable;
-import uk.ac.ebi.age.storage.AgeStorage;
 
 
 public interface DataModule extends Entity
@@ -14,7 +14,7 @@ public interface DataModule extends Entity
   boolean select( Attributed at );
  }
 
- AgeStorage getStorage();
+ AgeResolver getResolver();
  
  ModuleKey getModuleKey();
  

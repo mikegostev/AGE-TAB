@@ -16,12 +16,13 @@ import uk.ac.ebi.age.parser.ClassReference;
 import uk.ac.ebi.age.parser.ParserException;
 import uk.ac.ebi.age.parser.SyntaxProfile;
 import uk.ac.ebi.age.parser.SyntaxProfileDefinition;
-import uk.ac.ebi.age.service.id.IdGenerator;
 
 import com.pri.util.SpreadsheetReader;
 
 public class AgeTabSyntaxParserImpl extends AgeTabSyntaxParser
 {
+ private static int idGen = 0;
+ 
  public AgeTabSyntaxParserImpl(SyntaxProfile sp)
  {
   super(sp);
@@ -268,7 +269,7 @@ public class AgeTabSyntaxParserImpl extends AgeTabSyntaxParser
     {
      if( cell.matchString(profileDef.getAnonymousObjectId()) )
      { 
-      String id = "??"+IdGenerator.getInstance().getStringId("tempObjectId");
+      String id = "??"+(idGen++);
       cObj = data.createObject( id, header, block.getOrder(cell) );
       cObj.setIdDefined(false);
       cObj.setIdScope(IdScope.MODULE);
