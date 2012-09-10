@@ -10,17 +10,17 @@ import uk.ac.ebi.age.model.AgeAnnotation;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeClassPlug;
 import uk.ac.ebi.age.model.AgeContextSemanticElement;
+import uk.ac.ebi.age.model.AgeCustomRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
 import uk.ac.ebi.age.model.AttributeAttachmentRule;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.writable.AgeRelationClassWritable;
-import uk.ac.ebi.age.service.id.IdGenerator;
 
 import com.pri.util.Extractor;
 import com.pri.util.collection.ExtractorCollection;
 
-class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContextSemanticElement, Serializable
+class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContextSemanticElement, Serializable, AgeCustomRelationClass
 {
  private static final long serialVersionUID = 3L;
  
@@ -35,13 +35,12 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
    };
 
  
- private String name;
- private AgeClassPlug ownerClass;
- private AgeClassPlug rangeClass;
+ private final String name;
+ private final AgeClassPlug ownerClass;
+ private final AgeClassPlug rangeClass;
  private CustomAgeRelationClassImpl inverse;
  private boolean implicit = false;
- private String id;
- private ContextSemanticModel model;
+ private final ContextSemanticModel model;
  
  private Collection<AgeRelationClassPlug> superClassPlugs;
 
@@ -67,8 +66,6 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
   }
   else
    inverse = inv;
-  
-  id="AgeRelationClass"+IdGenerator.getInstance().getStringId("classId");
  }
 
  protected void setInverseClass( CustomAgeRelationClassImpl inv )
@@ -101,17 +98,6 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
   return Collections.singletonList(rangeClass.getAgeClass());
  }
  
- public void setId(String id)
- {
-  this.id = id;
- }
-
-
- public String getId()
- {
-  return id;
- }
-
  @Override
  public boolean isCustom()
  {
@@ -167,11 +153,13 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
   return implicit;
  }
  
+ @Override
  public void setImplicit( boolean b )
  {
   implicit=b;
  }
 
+ @Override
  public void resetModel()
  {
   ownerClass.unplug();
@@ -319,6 +307,29 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
  public ContextSemanticModel getSemanticModel()
  {
   return model;
+ }
+
+ @Override
+ public void unplug()
+ {
+ }
+
+ @Override
+ public boolean plug()
+ {
+  return true;
+ }
+
+ @Override
+ public boolean isPlugged()
+ {
+  return true;
+ }
+
+ @Override
+ public AgeRelationClass getAgeRelationClass()
+ {
+  return this;
  }
 
 }

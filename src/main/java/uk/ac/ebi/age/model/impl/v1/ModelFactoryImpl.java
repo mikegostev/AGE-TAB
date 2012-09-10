@@ -176,28 +176,28 @@ public class ModelFactoryImpl implements Serializable, ModelFactory
 
 
  @Override
- public AgeClassWritable createAgeClass(String name, String id, String pfx, SemanticModel sm)
+ public AgeClassWritable createAgeClass(String name, String pfx, SemanticModel sm)
  {
-  return new AgeClassImpl(name, id, pfx, sm);
+  return new AgeClassImpl(name, pfx, sm);
  }
 
  @Override
- public AgeRelationClassWritable createAgeRelationClass(String name, String id, SemanticModel sm)
+ public AgeRelationClassWritable createAgeRelationClass(String name, SemanticModel sm)
  {
-  return new AgeRelationClassImpl(name, id, sm);
+  return new AgeRelationClassImpl(name, sm);
  }
 
  @Override
- public AgeAnnotationClassWritable createAgeAnnotationClass(String name, String id, SemanticModel sm)
+ public AgeAnnotationClassWritable createAgeAnnotationClass(String name, SemanticModel sm)
  {
-  return new AgeAnnotationClassImpl(name, id, sm);
+  return new AgeAnnotationClassImpl(name, sm);
  }
 
  
  @Override
- public AgeAttributeClassWritable createAgeAttributeClass(String name, String id, DataType type, SemanticModel sm)
+ public AgeAttributeClassWritable createAgeAttributeClass(String name, DataType type, SemanticModel sm)
  {
-  return new AgeAttributeClassImpl(name, id, type, sm);
+  return new AgeAttributeClassImpl(name, type, sm);
  }
 
 

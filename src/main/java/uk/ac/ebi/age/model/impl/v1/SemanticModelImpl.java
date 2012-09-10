@@ -25,30 +25,24 @@ import uk.ac.ebi.age.model.writable.AgeRelationClassWritable;
 import uk.ac.ebi.age.model.writable.AttributeAttachmentRuleWritable;
 import uk.ac.ebi.age.model.writable.QualifierRuleWritable;
 import uk.ac.ebi.age.model.writable.RelationRuleWritable;
-import uk.ac.ebi.age.service.id.IdGenerator;
 
 public class SemanticModelImpl implements SemanticModel, Serializable
 {
  private static final long serialVersionUID = 1L;
  
- private Map<String,AgeClass> classMap = new TreeMap<String,AgeClass>();
- private Map<String,AgeAttributeClass> attributeMap = new TreeMap<String, AgeAttributeClass>();
- private Map<String,AgeRelationClass> relationMap = new TreeMap<String, AgeRelationClass>();
- private Map<String,AgeAnnotationClass> annotationMap = new TreeMap<String, AgeAnnotationClass>();
+ private final Map<String,AgeClass> classMap = new TreeMap<String,AgeClass>();
+ private final Map<String,AgeAttributeClass> attributeMap = new TreeMap<String, AgeAttributeClass>();
+ private final Map<String,AgeRelationClass> relationMap = new TreeMap<String, AgeRelationClass>();
+ private final Map<String,AgeAnnotationClass> annotationMap = new TreeMap<String, AgeAnnotationClass>();
 
- private Map<String,AgeClass> classIdMap = new TreeMap<String,AgeClass>();
- private Map<String,AgeAttributeClass> attributeIdMap = new TreeMap<String, AgeAttributeClass>();
- private Map<String,AgeRelationClass> relationIdMap = new TreeMap<String, AgeRelationClass>();
- private Map<String,AgeAnnotationClass> annotationIdMap = new TreeMap<String, AgeAnnotationClass>();
-
- private Collection<AgeAnnotation> annotation = new ArrayList<AgeAnnotation>();
+ private final Collection<AgeAnnotation> annotation = new ArrayList<AgeAnnotation>();
  
  private transient ModelFactory modelFactory;
 
- private AgeAttributeClassWritable attrClassRoot;
- private AgeClassWritable classRoot;
- private AgeRelationClassWritable relationRoot;
- private AgeAnnotationClassWritable annotationRoot;
+ private final AgeAttributeClassWritable attrClassRoot;
+ private final AgeClassWritable classRoot;
+ private final AgeRelationClassWritable relationRoot;
+ private final AgeAnnotationClassWritable annotationRoot;
 
  private int idGen;
  
@@ -56,10 +50,10 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  {
   this.modelFactory=modelFactory;
   
-  classRoot = modelFactory.createAgeClass(ROOT_CLASS_NAME, ROOT_CLASS_ID, "CL", this);
-  attrClassRoot = modelFactory.createAgeAttributeClass(ROOT_ATTRIBUTE_CLASS_NAME, ROOT_ATTRIBUTE_CLASS_ID, null, this);
-  relationRoot = modelFactory.createAgeRelationClass(ROOT_RELATION_CLASS_NAME, ROOT_RELATION_CLASS_ID, this);
-  annotationRoot = modelFactory.createAgeAnnotationClass(ROOT_ANNOTATION_CLASS_NAME, ROOT_ANNOTATION_CLASS_ID, this);
+  classRoot = modelFactory.createAgeClass(ROOT_CLASS_NAME, "CL", this);
+  attrClassRoot = modelFactory.createAgeAttributeClass(ROOT_ATTRIBUTE_CLASS_NAME, null, this);
+  relationRoot = modelFactory.createAgeRelationClass(ROOT_RELATION_CLASS_NAME, this);
+  annotationRoot = modelFactory.createAgeAnnotationClass(ROOT_ANNOTATION_CLASS_NAME, this);
  
   classRoot.setAbstract(true);
   attrClassRoot.setAbstract(true);
@@ -67,44 +61,38 @@ public class SemanticModelImpl implements SemanticModel, Serializable
   annotationRoot.setAbstract(true);
   
   classMap.put(ROOT_CLASS_NAME, classRoot);
-  classIdMap.put(ROOT_CLASS_ID, classRoot);
 
   attributeMap.put(ROOT_ATTRIBUTE_CLASS_NAME, attrClassRoot);
   attributeMap.put(ROOT_ATTRIBUTE_CLASS_ID, attrClassRoot);
 
   relationMap.put(ROOT_RELATION_CLASS_NAME, relationRoot);
-  relationIdMap.put(ROOT_RELATION_CLASS_ID, relationRoot);
 
   annotationMap.put(ROOT_ANNOTATION_CLASS_NAME, annotationRoot);
-  annotationIdMap.put(ROOT_ANNOTATION_CLASS_ID, annotationRoot);
  }
- 
-// public SemanticModelImpl( String sourceURI, ModelFactory modelFactory ) throws ModelException
-// {
-//  this.modelFactory=modelFactory;
-//  
-//  parseOWL(sourceURI);
-// }
- 
+
  
 
+ @Override
  public ModelFactory getModelFactory()
  {
   return modelFactory;
  }
 
+ @Override
  public void setModelFactory( ModelFactory mf )
  {
   modelFactory=mf;
  }
 
  
+ @Override
  public AgeClass getDefinedAgeClass(String name)
  {
   return classMap.get(name);
  }
 
  
+ @Override
  public AgePropertyClass getDefinedAgeClassProperty(String name)
  {
   AgePropertyClass prop = attributeMap.get(name);
@@ -116,24 +104,20 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  }
 
  @Override
- public AgeAttributeClassWritable createAgeAttributeClass(String name, String id, DataType type, AgeAttributeClass parent)
+ public AgeAttributeClassWritable createAgeAttributeClass(String name, DataType type, AgeAttributeClass parent)
  {
-  return createAgeAttributeClass(name, null, id, type, parent);
+  return createAgeAttributeClass(name, null, type, parent);
  }
 
  @Override
- public AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, String id, DataType type, AgeAttributeClass parent)
+ public AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, DataType type, AgeAttributeClass parent)
  {
-  if( id == null )
-   id = "AgeAttributeClass"+IdGenerator.getInstance().getStringId("classId");
-
-  AgeAttributeClassWritable cls = modelFactory.createAgeAttributeClass(name, id, type, this);
+  AgeAttributeClassWritable cls = modelFactory.createAgeAttributeClass(name, type, this);
   
   ((AgeAttributeClassWritable)parent).addSubClass(cls);
   cls.addSuperClass((AgeAttributeClassWritable)parent);
   
   attributeMap.put(name, cls);
-  attributeIdMap.put(id, cls);
   
   if( aliases != null )
   {
@@ -148,24 +132,20 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  }
 
  @Override
- public AgeAnnotationClassWritable createAgeAnnotationClass(String name, String id, AgeAnnotationClass parent)
+ public AgeAnnotationClassWritable createAgeAnnotationClass(String name, AgeAnnotationClass parent)
  {
-  return createAgeAnnotationClass(name, null, id, parent);
+  return createAgeAnnotationClass(name, null, parent);
  }
  
  @Override
- public AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, String id, AgeAnnotationClass parent)
+ public AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, AgeAnnotationClass parent)
  {
-  if( id == null )
-   id = "AgeAnnotationClass"+IdGenerator.getInstance().getStringId("classId");
-
-  AgeAnnotationClassWritable cls = modelFactory.createAgeAnnotationClass(name, id, this);
+  AgeAnnotationClassWritable cls = modelFactory.createAgeAnnotationClass(name, this);
   
   ((AgeAnnotationClassWritable)parent).addSubClass(cls);
   cls.addSuperClass((AgeAnnotationClassWritable)parent);
   
   annotationMap.put(name, cls);
-  annotationIdMap.put(id, cls);
   
   if( aliases != null )
   {
@@ -181,24 +161,20 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  }
  
  @Override 
- public AgeClassWritable createAgeClass(String name, String id, String pfx, AgeClass parent )
+ public AgeClassWritable createAgeClass(String name, String pfx, AgeClass parent )
  {
-  return createAgeClass(name, null, id, pfx, parent);
+  return createAgeClass(name, null, pfx, parent);
  }
  
  @Override 
- public AgeClassWritable createAgeClass(String name, Collection<String> aliases, String id, String pfx, AgeClass parent )
+ public AgeClassWritable createAgeClass(String name, Collection<String> aliases, String pfx, AgeClass parent )
  {
-  if( id == null )
-   id = "AgeClass"+IdGenerator.getInstance().getStringId("classId");
-  
-  AgeClassWritable cls = modelFactory.createAgeClass(name, id, pfx, this);
+  AgeClassWritable cls = modelFactory.createAgeClass(name, pfx, this);
   
   ((AgeClassWritable)parent).addSubClass(cls);
   cls.addSuperClass((AgeClassWritable)parent);
   
   classMap.put(name, cls);
-  classIdMap.put(id, cls);
   
   if( aliases != null )
   {
@@ -213,19 +189,15 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  }
 
  @Override
- public AgeRelationClassWritable createAgeRelationClass(String name, String id, AgeRelationClass parent)
+ public AgeRelationClassWritable createAgeRelationClass(String name, AgeRelationClass parent)
  {
-  return createAgeRelationClass(name, null, id, parent);
+  return createAgeRelationClass(name, null, parent);
  }
  
  @Override
- public AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases, String id, AgeRelationClass parent)
+ public AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases,  AgeRelationClass parent)
  {
-  if( id == null )
-   id = "AgeRelationClass"+IdGenerator.getInstance().getStringId("classId");
-
-  
-  AgeRelationClassWritable cls = getModelFactory().createAgeRelationClass(name, id, this);
+  AgeRelationClassWritable cls = getModelFactory().createAgeRelationClass(name, this);
   
   if( parent != null )
   {
@@ -233,7 +205,6 @@ public class SemanticModelImpl implements SemanticModel, Serializable
    cls.addSuperClass((AgeRelationClassWritable) parent);
 
    relationMap.put(name, cls);
-   relationIdMap.put(id, cls);
   }
   
   if( aliases != null )
@@ -313,7 +284,6 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  protected void addAttributeClass(AgeAttributeClassWritable cls)
  {
   attributeMap.put(cls.getName(), cls);
-  attributeIdMap.put(cls.getId(), cls);
   
   if( cls.getAliases() != null )
    for( String als : cls.getAliases() )
@@ -323,7 +293,6 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  protected void addClass(AgeClassWritable cls)
  {
   classMap.put(cls.getName(), cls);
-  classIdMap.put(cls.getId(), cls);
 
   if( cls.getAliases() != null )
    for( String als : cls.getAliases() )
@@ -333,33 +302,12 @@ public class SemanticModelImpl implements SemanticModel, Serializable
  protected void addRelationClass(AgeRelationClassWritable cls)
  {
   relationMap.put(cls.getName(), cls);
-  relationIdMap.put(cls.getId(), cls);
 
   if( cls.getAliases() != null )
    for( String als : cls.getAliases() )
     relationMap.put( als, cls );
  }
 
-
- @Override
- public AgeClass getDefinedAgeClassById(String classId)
- {
-  return classIdMap.get(classId);
- }
-
-
- @Override
- public AgeRelationClass getDefinedAgeRelationClassById(String classId)
- {
-  return relationIdMap.get(classId);
- }
-
-
- @Override
- public AgeAttributeClass getDefinedAgeAttributeClassById(String classId)
- {
-  return attributeIdMap.get(classId);
- }
 
  @Override
  public Collection<AgeClass> getAgeClasses()

@@ -13,8 +13,7 @@ public interface AgeClassWritable extends AgeClass, AgeAbstractClassWritable, At
  void addSubClass(AgeClassWritable cls);
  void addSuperClass(AgeClassWritable cls);
 
- void setId(String string);
- 
+ @Override
  void addAnnotation( AgeAnnotation annt );
 
  void setAbstract(boolean b);

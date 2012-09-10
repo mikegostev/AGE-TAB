@@ -10,10 +10,6 @@ public interface AgeAbstractClass
  boolean isClassOrSubclass( AgeAbstractClass cl );
  
  String getName();
- String getId();
-
-// Collection<AgeRestriction> getAttributeRestrictions();
-// Collection<AgeRestriction> getAttributeAllRestrictions();
 
  boolean isAbstract();
  boolean isCustom();

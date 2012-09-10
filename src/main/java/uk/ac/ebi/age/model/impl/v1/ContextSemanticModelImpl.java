@@ -11,6 +11,9 @@ import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeAttributeClassPlug;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeClassPlug;
+import uk.ac.ebi.age.model.AgeCustomAttributeClass;
+import uk.ac.ebi.age.model.AgeCustomClass;
+import uk.ac.ebi.age.model.AgeCustomRelationClass;
 import uk.ac.ebi.age.model.AgePropertyClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
@@ -40,8 +43,6 @@ import uk.ac.ebi.age.model.writable.RelationRuleWritable;
 
 public class ContextSemanticModelImpl implements ContextSemanticModel, Serializable
 {
- private static int idGen = 0;
- 
  private static final long serialVersionUID = 1L;
  
  private transient SemanticModel masterModel;
@@ -49,7 +50,6 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  private Map<String,AgeClassPlug> classPlugs;
  private Map<String,AgeAttributeClassPlug> attrClassPlugs;
  private Map<String,AgeRelationClassPlug> relClassPlugs;
- private Map<String,AgeRelationClassPlug> relImplicitClassPlugs;
 
  
  private Map<String,AgeClassWritable> customClassMap;
@@ -147,8 +147,7 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
    cls.addSuperClass( (AgeRelationClassWritable)supCls);
   
   
-  AgeRelationClassWritable invRelCls = masterModel.getModelFactory().createAgeRelationClass( "!"+name,
-    "InvImpRelClass-"+(idGen++), null );
+  AgeRelationClassWritable invRelCls = masterModel.getModelFactory().createAgeRelationClass( "!"+name, null );
   
   invRelCls.setImplicit(true);
   
@@ -160,27 +159,27 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  }
 
  @Override
- public AgeAnnotationClassWritable createAgeAnnotationClass(String name, String id, AgeAnnotationClass parent)
+ public AgeAnnotationClassWritable createAgeAnnotationClass(String name, AgeAnnotationClass parent)
  {
-  return masterModel.createAgeAnnotationClass(name, id, parent);
+  return masterModel.createAgeAnnotationClass(name, parent);
  }
 
  @Override
- public AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, String id, AgeAnnotationClass parent)
+ public AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, AgeAnnotationClass parent)
  {
-  return masterModel.createAgeAnnotationClass(name, aliases, id, parent);
+  return masterModel.createAgeAnnotationClass(name, aliases, parent);
  }
 
  @Override
- public AgeClassWritable createAgeClass(String name, String id, String pfx, AgeClass parent)
+ public AgeClassWritable createAgeClass(String name, String pfx, AgeClass parent)
  {
-  return masterModel.createAgeClass(name, id, pfx, parent);
+  return masterModel.createAgeClass(name, pfx, parent);
  }
  
  @Override
- public AgeClassWritable createAgeClass(String name, Collection<String> aliases, String id, String pfx, AgeClass parent)
+ public AgeClassWritable createAgeClass(String name, Collection<String> aliases, String pfx, AgeClass parent)
  {
-  return masterModel.createAgeClass(name, aliases, id, pfx, parent);
+  return masterModel.createAgeClass(name, aliases, pfx, parent);
  }
 
  
@@ -320,15 +319,15 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  }
 
  @Override
- public AgeAttributeClassWritable createAgeAttributeClass(String name, String id, DataType type, AgeAttributeClass parent)
+ public AgeAttributeClassWritable createAgeAttributeClass(String name, DataType type, AgeAttributeClass parent)
  {
-  return masterModel.createAgeAttributeClass(name, id, type, parent);
+  return masterModel.createAgeAttributeClass(name, type, parent);
  }
 
  @Override
- public AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, String id, DataType type, AgeAttributeClass parent)
+ public AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, DataType type, AgeAttributeClass parent)
  {
-  return masterModel.createAgeAttributeClass(name, aliases, id, type, parent);
+  return masterModel.createAgeAttributeClass(name, aliases, type, parent);
  }
  
  @Override
@@ -338,15 +337,15 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  }
 
  @Override
- public AgeRelationClassWritable createAgeRelationClass(String name, String id, AgeRelationClass parent)
+ public AgeRelationClassWritable createAgeRelationClass(String name, AgeRelationClass parent)
  {
-  return masterModel.createAgeRelationClass(name, id, parent);
+  return masterModel.createAgeRelationClass(name, parent);
  }
 
  @Override
- public AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases, String id, AgeRelationClass parent)
+ public AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases, AgeRelationClass parent)
  {
-  return masterModel.createAgeRelationClass(name, aliases, id, parent);
+  return masterModel.createAgeRelationClass(name, aliases, parent);
  }
  
  @Override
@@ -441,11 +440,6 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
     plg.unplug();
   }
 
-  if(relImplicitClassPlugs != null)
-  {
-   for(AgeRelationClassPlug plg : relImplicitClassPlugs.values())
-    plg.unplug();
-  }
  }
 
  @Override
@@ -453,88 +447,58 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  {
   AgeClassPlug plug = null;
   
+  String classKey = (cls.isCustom()?"C":"D")+cls.getName();
+  
   if( classPlugs == null )
    classPlugs = new TreeMap<String, AgeClassPlug>();
   else
   {
-   plug = classPlugs.get(cls.getId());
+   plug = classPlugs.get(classKey);
    
    if( plug != null )
     return plug;
   }
   
   if( cls.isCustom() )
-   plug = new AgeClassPlugFixed(cls);
+   plug = (AgeCustomClass)cls;
   else
    plug = masterModel.getModelFactory().createAgeClassPlug(cls,this);
   
-  classPlugs.put(cls.getId(), plug);
+  classPlugs.put(classKey, plug);
   
   return plug;
  }
 
- @Override
- public AgeClass getDefinedAgeClassById(String classId)
- {
-  return masterModel.getDefinedAgeClassById(classId);
- }
+
 
  @Override
  public AgeRelationClassPlug getAgeRelationClassPlug(AgeRelationClass cls)
  {
-  if( cls.isImplicit() )
-  {
-   AgeRelationClassPlug plug = null;
-   
-   if( relImplicitClassPlugs == null )
-    relImplicitClassPlugs = new TreeMap<String, AgeRelationClassPlug>();
-   else
-   {
-    plug = relImplicitClassPlugs.get(cls.getInverseRelationClass().getId());
-    
-    if( plug != null )
-     return plug;
-   }
-   
-
-   if( cls.getInverseRelationClass().isCustom() )
-    plug = new AgeRelationClassPlugFixed(cls);
-   else
-    plug = masterModel.getModelFactory().createAgeRelationInverseClassPlug(cls,this);
+  String classKey = cls.isCustom()?"C":"D";
+ 
+  classKey += cls.isImplicit()?("I"+cls.getInverseRelationClass().getName()):("E"+cls.getName());
   
-   relImplicitClassPlugs.put(cls.getInverseRelationClass().getId(), plug);
-   
-   return plug;
-  }
+  
+  AgeRelationClassPlug plug = null;
+
+  if(relClassPlugs == null)
+   relClassPlugs = new TreeMap<String, AgeRelationClassPlug>();
   else
   {
-   AgeRelationClassPlug plug = null;
+   plug = relClassPlugs.get(classKey);
 
-   if(relClassPlugs == null)
-    relClassPlugs = new TreeMap<String, AgeRelationClassPlug>();
-   else
-   {
-    plug = relClassPlugs.get(cls.getId());
-
-    if(plug != null)
-     return plug;
-   }
-
-   if(cls.isCustom())
-    plug = new AgeRelationClassPlugFixed(cls);
-   else
-    plug = masterModel.getModelFactory().createAgeRelationClassPlug(cls, this);
-
-   relClassPlugs.put(cls.getId(), plug);
-
-   return plug;
+   if(plug != null)
+    return plug;
   }
- }
 
- @Override
- public AgeRelationClass getDefinedAgeRelationClassById(String classId)
- {
-  return masterModel.getDefinedAgeRelationClassById(classId);
+  if(cls.isCustom())
+   plug = (AgeCustomRelationClass)cls;
+  else
+   plug = masterModel.getModelFactory().createAgeRelationClassPlug(cls, this);
+
+  relClassPlugs.put(classKey, plug);
+
+  return plug;
  }
 
  
@@ -542,15 +506,17 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
  public AgeAttributeClassPlug getAgeAttributeClassPlug(AgeAttributeClass cls)
  {
   if( cls.isCustom() )
-   return cls;
+   return (AgeCustomAttributeClass)cls;
   
+  String classKey = (cls.isCustom()?"C":"D")+cls.getName();
+
   AgeAttributeClassPlug plug = null;
   
   if( attrClassPlugs == null )
    attrClassPlugs = new TreeMap<String, AgeAttributeClassPlug>();
   else
   {
-   plug = attrClassPlugs.get(cls.getId());
+   plug = attrClassPlugs.get(classKey);
   
    if( plug != null )
     return plug;
@@ -558,16 +524,11 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
   
   plug = masterModel.getModelFactory().createAgeAttributeClassPlug(cls,this);
   
-  attrClassPlugs.put(cls.getId(), plug);
+  attrClassPlugs.put(classKey, plug);
   
   return plug;
  }
 
- @Override
- public AgeAttributeClass getDefinedAgeAttributeClassById(String classId)
- {
-  return masterModel.getDefinedAgeAttributeClassById(classId);
- }
 
  @Override
  public Collection<? extends AgeClass> getAgeClasses()

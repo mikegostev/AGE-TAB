@@ -4,12 +4,12 @@ import java.util.Collection;
 
 public interface AgeRelationClass extends AgePropertyClass, AgeAbstractClass, AgeSemanticElement, AttributedClass
 {
+ @Override
  Collection<AgeRelationClass> getSuperClasses();
+ @Override
  Collection<AgeRelationClass> getSubClasses();
 
-
-
- String getId();
+ @Override
  String getName();
 
  boolean isWithinRange(AgeClass key);
@@ -18,6 +18,7 @@ public interface AgeRelationClass extends AgePropertyClass, AgeAbstractClass, Ag
  Collection<AgeClass> getRange();
  Collection<AgeClass> getDomain();
 
+ @Override
  boolean isCustom();
 
  AgeRelationClass getInverseRelationClass();

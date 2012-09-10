@@ -17,7 +17,6 @@ class AgeAttributeClassImpl extends AgeAbstractClassImpl implements AgeAttribute
  
  private DataType dataType;
  private String name;
- private String id;
 
  private boolean isAbstract;
 
@@ -25,8 +24,8 @@ class AgeAttributeClassImpl extends AgeAbstractClassImpl implements AgeAttribute
  
  private AgeClass targetClass;
 
- private Collection<AgeAttributeClass> subClasses = new HashSet<AgeAttributeClass>();
- private Collection<AgeAttributeClass> superClasses = new HashSet<AgeAttributeClass>();
+ private final Collection<AgeAttributeClass> subClasses = new HashSet<AgeAttributeClass>();
+ private final Collection<AgeAttributeClass> superClasses = new HashSet<AgeAttributeClass>();
 // private Collection<AgeRestriction> attributeRestrictions = new LinkedList<AgeRestriction>();
 
  protected AgeAttributeClassImpl()
@@ -34,36 +33,26 @@ class AgeAttributeClassImpl extends AgeAbstractClassImpl implements AgeAttribute
   super(null);
  }
  
- public AgeAttributeClassImpl(String name, String id, DataType type, SemanticModel sm)
+ public AgeAttributeClassImpl(String name, DataType type, SemanticModel sm)
  {
   super(sm);
   dataType=type;
   this.name=name;
-  this.id=id;
  }
 
-// public AgeAttribute createAttribute()
-// {
-//  getSemanticModel().
-//  throw new dev.NotImplementedYetException();
-// }
-
-// public boolean validateValue(String val)
-// {
-//  // TODO Auto-generated method stub
-//  throw new dev.NotImplementedYetException();
-// }
-
+ @Override
  public DataType getDataType()
  {
   return dataType;
  }
 
+ @Override
  public void setDataType(DataType dataType)
  {
   this.dataType = dataType;
  }
 
+ @Override
  public String getName()
  {
   return name;
@@ -84,63 +73,39 @@ class AgeAttributeClassImpl extends AgeAbstractClassImpl implements AgeAttribute
  }
 
  
+ @Override
  public Collection<AgeAttributeClass> getSuperClasses()
  {
   return superClasses;
  }
  
  
+ @Override
  public Collection<AgeAttributeClass> getSubClasses()
  {
   return subClasses;
  }
 
+ @Override
  public AgeClass getOwningClass()
  {
   return null;
  }
 
+ @Override
  public boolean isCustom()
  {
   return false;
  }
 
- public String getId()
- {
-  return id;
- }
 
-// public void addAttributeRestriction(AgeRestriction rest)
-// {
-//  attributeRestrictions.add(rest);
-// }
-//
-// public Collection<AgeRestriction> getAttributeRestrictions()
-// {
-//  return attributeRestrictions;
-// }
-//
-// public Collection<AgeRestriction> getAttributeAllRestrictions()
-// {
-//  Collection<Collection<AgeRestriction>> allRest = new ArrayList<Collection<AgeRestriction>>(10);
-//  
-//  Collector.collectFromHierarchy(this, allRest, new Collector<Collection<AgeRestriction>>()
-//  {
-//   public Collection<AgeRestriction> get(AgeAbstractClass cls)
-//   {
-//    Collection<AgeRestriction> restr = ((AgeAttributeClassImpl)cls).getAttributeRestrictions();
-//    return restr==null||restr.size()==0?null:restr;
-//   }
-//  });
-//  
-//  return new CollectionsUnion<AgeRestriction>(allRest);
-// }
-
+ @Override
  public boolean isAbstract()
  {
   return isAbstract;
  }
 
+ @Override
  public void setAbstract(boolean isAbstract)
  {
   this.isAbstract = isAbstract;
@@ -155,39 +120,23 @@ class AgeAttributeClassImpl extends AgeAbstractClassImpl implements AgeAttribute
   aliases.add(ali);
  }
 
+ @Override
  public Collection<String> getAliases()
  {
   return aliases;
  }
 
+ @Override
  public AgeClass getTargetClass()
  {
   return targetClass;
  }
 
+ @Override
  public void setTargetClass(AgeClass targetClass)
  {
   this.targetClass = targetClass;
  }
 
- public void unplug()
- {
- }
- 
- public boolean plug()
- {
-  return true;
- }
- 
- public AgeAttributeClass getAgeAttributeClass()
- {
-  return this;
- }
-
- @Override
- public boolean isPlugged()
- {
-  return true;
- }
 }
 

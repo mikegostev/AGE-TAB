@@ -17,6 +17,7 @@ class CustomAgeAttributeClassImpl extends AbstractCustomAgeAttributeClassImpl
   dataType=type;
  }
 
+ @Override
  public DataType getDataType()
  {
   return dataType;

@@ -20,18 +20,18 @@ public interface ModelFactory
 
  DataModuleWritable createDataModule(ContextSemanticModel sm);
 
- AgeClassWritable createAgeClass(String name, String id, String pfx, SemanticModel sm);
+ AgeClassWritable createAgeClass(String name, String pfx, SemanticModel sm);
 
  AgeClassWritable createCustomAgeClass(String name, String pfx, ContextSemanticModel sm);
 
  AgeObjectWritable createAgeObject(ClassRef ageClassRef, String id);
 
- AgeRelationClassWritable createAgeRelationClass(String name, String id, SemanticModel sm);
+ AgeRelationClassWritable createAgeRelationClass(String name, SemanticModel sm);
 
  AgeRelationClassWritable createCustomAgeRelationClass(String name, ContextSemanticModel sm, AgeClass range,
    AgeClass owner);
 
- AgeAttributeClassWritable createAgeAttributeClass(String name, String id, DataType type, SemanticModel sm);
+ AgeAttributeClassWritable createAgeAttributeClass(String name, DataType type, SemanticModel sm);
 
  AgeAttributeClassWritable createCustomAgeAttributeClass(String name, DataType type, ContextSemanticModel sm,
    AgeClass owner);
@@ -65,7 +65,7 @@ public interface ModelFactory
 
  AgeRelationClassPlug createAgeRelationInverseClassPlug(AgeRelationClass cls, ContextSemanticModel sm);
 
- AgeAnnotationClassWritable createAgeAnnotationClass(String name, String id, SemanticModel semanticModelImpl);
+ AgeAnnotationClassWritable createAgeAnnotationClass(String name, SemanticModel semanticModelImpl);
 
  AgeAnnotationWritable createAgeAnnotation(AgeAnnotationClass cls, SemanticModel semanticModelImpl);
 

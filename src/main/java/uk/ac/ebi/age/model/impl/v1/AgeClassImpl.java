@@ -18,46 +18,30 @@ class AgeClassImpl extends AgeAbstractClassImpl implements AgeClassWritable, Ser
 {
  private static final long serialVersionUID = 1L;
 
- private String name;
- private String id;
+ private final String name;
  private String idPrefix;
 
  private boolean isAbstract;
  
  private Collection<String> aliases;
 
- private Collection<AgeClass> subClasses = new HashSet<AgeClass>();
- private Collection<AgeClass> superClasses = new HashSet<AgeClass>();
+ private final Collection<AgeClass> subClasses = new HashSet<AgeClass>();
+ private final Collection<AgeClass> superClasses = new HashSet<AgeClass>();
 
  private Collection<RelationRule> relationRules;
  
- public AgeClassImpl(String name, String id, String pfx, SemanticModel sm)
+ public AgeClassImpl(String name, String pfx, SemanticModel sm)
  {
   super( sm );
   this.name=name;
-  this.id=id;
- 
+
   if( pfx == null )
    idPrefix = name.substring(0,1);
   else
    idPrefix=pfx;
-  
-//  Collection< Collection<AgeRestriction> > un = new ArrayList<Collection<AgeRestriction>>(2);
-//  un.add(restrictions);
-//  un.add(attributeRestrictions);
-//  
-//  unionRestrictions = new CollectionsUnion<AgeRestriction>( un );
  }
 
- public String getId()
- {
-  return id;
- }
 
- public void setId(String id)
- {
-  this.id = id;
- }
  
  @Override
  public void addSuperClass( AgeClassWritable spCls )
@@ -74,21 +58,25 @@ class AgeClassImpl extends AgeAbstractClassImpl implements AgeClassWritable, Ser
  }
 
  
+ @Override
  public Collection<AgeClass> getSuperClasses()
  {
   return superClasses;
  }
  
+ @Override
  public Collection<AgeClass> getSubClasses()
  {
   return subClasses;
  }
 
+ @Override
  public String getName()
  {
   return name;
  }
 
+ @Override
  public boolean isCustom()
  {
   return false;
@@ -96,16 +84,19 @@ class AgeClassImpl extends AgeAbstractClassImpl implements AgeClassWritable, Ser
 
  
 
+ @Override
  public String getIdPrefix()
  {
   return idPrefix;
  }
 
+ @Override
  public boolean isAbstract()
  {
   return isAbstract;
  }
 
+ @Override
  public void setAbstract(boolean isAbstract)
  {
   this.isAbstract = isAbstract;
@@ -126,6 +117,7 @@ class AgeClassImpl extends AgeAbstractClassImpl implements AgeClassWritable, Ser
   
   Collector.collectFromHierarchy(this,allRest, new Collector<Collection<RelationRule>>(){
 
+   @Override
    public Collection<RelationRule> get(AgeAbstractClass cls)
    {
     Collection<RelationRule> restr = ((AgeClass)cls).getRelationRules();
@@ -147,6 +139,7 @@ class AgeClassImpl extends AgeAbstractClassImpl implements AgeClassWritable, Ser
   aliases.add(ali);
  }
 
+ @Override
  public Collection<String> getAliases()
  {
   return aliases;

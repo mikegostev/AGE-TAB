@@ -14,15 +14,14 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
 {
  private static final long serialVersionUID = 1L;
  
- private String name;
- private String id;
+ private final String name;
 
  private boolean isAbstract;
 
- private Collection<AgeClass> domain = new HashSet<AgeClass>();
- private Collection<AgeClass> range = new HashSet<AgeClass>();
- private Collection<AgeRelationClass> subclasses = new HashSet<AgeRelationClass>();
- private Collection<AgeRelationClass> superclasses = new HashSet<AgeRelationClass>();
+ private final Collection<AgeClass> domain = new HashSet<AgeClass>();
+ private final Collection<AgeClass> range = new HashSet<AgeClass>();
+ private final Collection<AgeRelationClass> subclasses = new HashSet<AgeRelationClass>();
+ private final Collection<AgeRelationClass> superclasses = new HashSet<AgeRelationClass>();
 
 // private Collection<AgeRestriction> attributeRestrictions = new LinkedList<AgeRestriction>();
  
@@ -36,24 +35,20 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
  private boolean symmetric;
  private boolean transitive;
 
- public AgeRelationClassImpl(String name, String id, SemanticModel sm)
+ public AgeRelationClassImpl(String name, SemanticModel sm)
  {
   super(sm);
   this.name=name;
-  this.id=id;
  }
 
+ @Override
  public String getName()
  {
   return name;
  }
- 
- public String getId()
- {
-  return id;
- }
- 
 
+
+ @Override
  public void addDomainClass(AgeClass dmCls)
  {
 //  for( AgeClass exstDmCla : domain )
@@ -63,6 +58,7 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
   domain.add(dmCls);
  }
 
+ @Override
  public void addRangeClass(AgeClass rgCls)
  {
 //  for( AgeClass exstRgCla : range )
@@ -113,26 +109,31 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
  }
 
 
+ @Override
  public Collection<AgeClass> getRange()
  {
   return range;
  }
  
+ @Override
  public Collection<AgeClass> getDomain()
  {
   return domain;
  }
 
+ @Override
  public Collection<AgeRelationClass> getSubClasses()
  {
   return subclasses;
  }
 
+ @Override
  public Collection<AgeRelationClass> getSuperClasses()
  {
   return superclasses;
  }
 
+ @Override
  public boolean isCustom()
  {
   return false;
@@ -196,11 +197,13 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
 //  return new CollectionsUnion<AgeRestriction>(allRest);
 // }
 
+ @Override
  public boolean isAbstract()
  {
   return isAbstract;
  }
 
+ @Override
  public void setAbstract(boolean isAbstract)
  {
   this.isAbstract = isAbstract;
@@ -239,26 +242,31 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
   aliases.add(ali);
  }
 
+ @Override
  public Collection<String> getAliases()
  {
   return aliases;
  }
 
+ @Override
  public void setFunctional(boolean functional)
  {
   this.functional = functional;
  }
 
+ @Override
  public void setInverseFunctional(boolean inverseFunctional)
  {
   this.inverseFunctional = inverseFunctional;
  }
 
+ @Override
  public void setSymmetric(boolean symmetric)
  {
   this.symmetric = symmetric;
  }
 
+ @Override
  public void setTransitive(boolean transitive)
  {
   this.transitive = transitive;

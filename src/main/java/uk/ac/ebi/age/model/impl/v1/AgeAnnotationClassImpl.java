@@ -14,14 +14,13 @@ class AgeAnnotationClassImpl extends AgeAbstractClassImpl implements AgeAnnotati
  private static final long serialVersionUID = 1L;
  
  private String name;
- private String id;
 
  private boolean isAbstract;
 
 
 
- private Collection<AgeAnnotationClass> subClasses = new HashSet<AgeAnnotationClass>();
- private Collection<AgeAnnotationClass> superClasses = new HashSet<AgeAnnotationClass>();
+ private final Collection<AgeAnnotationClass> subClasses = new HashSet<AgeAnnotationClass>();
+ private final Collection<AgeAnnotationClass> superClasses = new HashSet<AgeAnnotationClass>();
 
  private Collection<String> aliases;
 
@@ -30,11 +29,10 @@ class AgeAnnotationClassImpl extends AgeAbstractClassImpl implements AgeAnnotati
   super(null);
  }
  
- public AgeAnnotationClassImpl(String name, String id, SemanticModel sm)
+ public AgeAnnotationClassImpl(String name, SemanticModel sm)
  {
   super(sm);
   this.name=name;
-  this.id=id;
  }
 
 // public AgeAttribute createAttribute()
@@ -49,6 +47,7 @@ class AgeAnnotationClassImpl extends AgeAbstractClassImpl implements AgeAnnotati
 //  throw new dev.NotImplementedYetException();
 // }
 
+ @Override
  public String getName()
  {
   return name;
@@ -80,22 +79,19 @@ class AgeAnnotationClassImpl extends AgeAbstractClassImpl implements AgeAnnotati
   return subClasses;
  }
 
+ @Override
  public boolean isCustom()
  {
   return false;
  }
 
- public String getId()
- {
-  return id;
- }
-
-
+ @Override
  public boolean isAbstract()
  {
   return isAbstract;
  }
 
+ @Override
  public void setAbstract(boolean isAbstract)
  {
   this.isAbstract = isAbstract;
@@ -110,6 +106,7 @@ class AgeAnnotationClassImpl extends AgeAbstractClassImpl implements AgeAnnotati
   aliases.add(ali);
  }
 
+ @Override
  public Collection<String> getAliases()
  {
   return aliases;

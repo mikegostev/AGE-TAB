@@ -25,21 +25,20 @@ public interface SemanticModel
  int getIdGen();
  void setIdGen( int id );
  
- AgeClassWritable createAgeClass(String name, String id, String pfx, AgeClass parent);
- AgeClassWritable createAgeClass(String name, Collection<String> aliases, String id, String pfx, AgeClass parent);
+ AgeClassWritable createAgeClass(String name, String pfx, AgeClass parent);
+ AgeClassWritable createAgeClass(String name, Collection<String> aliases, String pfx, AgeClass parent);
 
- AgeAttributeClassWritable createAgeAttributeClass(String name, String id, DataType type, AgeAttributeClass parent);
- AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, String id, DataType type, AgeAttributeClass parent);
+ AgeAttributeClassWritable createAgeAttributeClass(String name, DataType type, AgeAttributeClass parent);
+ AgeAttributeClassWritable createAgeAttributeClass(String name, Collection<String> aliases, DataType type, AgeAttributeClass parent);
 
- AgeRelationClassWritable createAgeRelationClass(String name, String id, AgeRelationClass parent);
- AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases, String id, AgeRelationClass parent);
+ AgeRelationClassWritable createAgeRelationClass(String name, AgeRelationClass parent);
+ AgeRelationClassWritable createAgeRelationClass(String name, Collection<String> aliases,  AgeRelationClass parent);
 
- AgeAnnotationClassWritable createAgeAnnotationClass(String name, String id, AgeAnnotationClass parent);
- AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, String id, AgeAnnotationClass parent);
+ AgeAnnotationClassWritable createAgeAnnotationClass(String name, AgeAnnotationClass parent);
+ AgeAnnotationClassWritable createAgeAnnotationClass(String name, Collection<String> aliases, AgeAnnotationClass parent);
 
  
  AgeAnnotationWritable createAgeAnnotation(AgeAnnotationClass cls);
-// AgeAttributeWritable createAgeAttribute(AgeAttributeClass attr);
 
  ContextSemanticModel createContextSemanticModel();
 
@@ -50,28 +49,16 @@ public interface SemanticModel
  QualifierRuleWritable createQualifierRule();
 
  AgeClass getDefinedAgeClass(String name);
- AgeClass getDefinedAgeClassById(String name);
 
  AgeRelationClass getDefinedAgeRelationClass(String name);
- AgeRelationClass getDefinedAgeRelationClassById(String name);
 
  AgePropertyClass getDefinedAgeClassProperty(String name);
 
-// AgeRelationClass getAttributeAttachmentClass();
- 
  AgeAttributeClass getDefinedAgeAttributeClass(String attrClass);
- AgeAttributeClass getDefinedAgeAttributeClassById(String classId);
 
  
  ModelFactory getModelFactory();
  void setModelFactory( ModelFactory mf );
-
- 
-// AgeAttributeClassPlug getAgeAttributeClassPlug(AgeAttributeClass attrClass);
-//
-// AgeClassPlug getAgeClassPlug(AgeClass cls);
-//
-// AgeRelationClassPlug getAgeRelationClassPlug(AgeRelationClass relClass);
 
  Collection< ? extends AgeClass> getAgeClasses();
  
@@ -86,20 +73,6 @@ public interface SemanticModel
 
  void addAnnotation(AgeAnnotation ant);
  Collection<AgeAnnotation> getAnnotations();
-
-
-// void setRootAgeClass( AgeClass cls );
-// void setRootAgeAttributeClass( AgeAttributeClass cls );
-// void setRootAgeRelationClass( AgeRelationClass cls );
-// void setRootAgeAnnotationClass( AgeAnnotationClass cls );
-
-
-
-// AgeClass getAgeClass(String clsName);
-//
-// AgeRelationClass getAgeRelationClass(String relClsClass);
-//
-// AgeAttributeClass getAgeAttributeClass(String attrClsName);
 
 
 }

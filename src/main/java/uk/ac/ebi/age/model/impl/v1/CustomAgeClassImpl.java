@@ -9,6 +9,7 @@ import uk.ac.ebi.age.model.AgeAnnotation;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeClassPlug;
 import uk.ac.ebi.age.model.AgeContextSemanticElement;
+import uk.ac.ebi.age.model.AgeCustomClass;
 import uk.ac.ebi.age.model.AttributeAttachmentRule;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.RelationRule;
@@ -17,7 +18,7 @@ import uk.ac.ebi.age.model.writable.AgeClassWritable;
 import com.pri.util.Extractor;
 import com.pri.util.collection.ExtractorCollection;
 
-class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSemanticElement 
+class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSemanticElement, AgeCustomClass
 {
  private static final long serialVersionUID = 3L;
  
@@ -35,7 +36,6 @@ class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSe
  private final ContextSemanticModel model;
 
  private final String name;
- private String id;
  
  private String idPrefix;
  private Collection<AgeClassPlug> superClassPlugs;
@@ -54,22 +54,8 @@ class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSe
   else
    idPrefix=pfx;
   
-  id = "AgeClass"+IdGenerator.getInstance().getStringId("classId");
  }
 
- @Override
- public String getId()
- {
-  return id;
- }
-
- @Override
- public void setId(String id)
- {
-  this.id = id;
- }
- 
- 
  @Override
  public Collection<AgeClass> getSuperClasses()
  {
@@ -216,6 +202,29 @@ class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSe
  public void addAttributeAttachmentRule(AttributeAttachmentRule atatRule)
  {
   throw new UnsupportedOperationException();
+ }
+
+ @Override
+ public void unplug()
+ {
+ }
+
+ @Override
+ public boolean plug()
+ {
+  return true;
+ }
+
+ @Override
+ public boolean isPlugged()
+ {
+  return true;
+ }
+
+ @Override
+ public AgeClass getAgeClass()
+ {
+  return this;
  }
 
 }

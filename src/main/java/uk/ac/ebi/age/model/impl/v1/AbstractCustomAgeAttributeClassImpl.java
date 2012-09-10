@@ -11,6 +11,7 @@ import uk.ac.ebi.age.model.AgeAttributeClassPlug;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeClassPlug;
 import uk.ac.ebi.age.model.AgeContextSemanticElement;
+import uk.ac.ebi.age.model.AgeCustomAttributeClass;
 import uk.ac.ebi.age.model.AgeSemanticElement;
 import uk.ac.ebi.age.model.AttributeAttachmentRule;
 import uk.ac.ebi.age.model.ContextSemanticModel;
@@ -19,7 +20,7 @@ import uk.ac.ebi.age.model.writable.AgeAttributeClassWritable;
 import com.pri.util.Extractor;
 import com.pri.util.collection.ExtractorCollection;
 
-abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemanticElement, AgeAttributeClassWritable, Serializable, AgeSemanticElement
+abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemanticElement, AgeAttributeClassWritable, Serializable, AgeSemanticElement, AgeCustomAttributeClass
 {
  private static final long serialVersionUID = 3L;
  
@@ -36,7 +37,6 @@ abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemantic
  private final ContextSemanticModel model;
  
  private final String name;
- private String id;
 
  private final AgeClassPlug owner;
  
@@ -50,27 +50,13 @@ abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemantic
   model = sm;
   this.name=name2;
   owner = sm.getAgeClassPlug(owner2);
-  
-  id = "AgeAttributeClass"+name2+System.currentTimeMillis();
  }
 
- @Override
- public String getId()
- {
-  return id;
- }
-
- public void setId(String id)
- {
-  this.id = id;
- }
- 
  @Override
  public String getName()
  {
   return name;
  }
- 
  
  @Override
  public Collection<AgeAttributeClass> getSuperClasses()
