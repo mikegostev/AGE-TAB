@@ -203,27 +203,27 @@ public class ModelFactoryImpl implements Serializable, ModelFactory
 
 
  @Override
- public AgeAttributeClassPlug createAgeAttributeClassPlug(AgeAttributeClass attrClass, ContextSemanticModel sm)
+ public AgeAttributeClassPlug createAgeAttributeClassPlug(AgeAttributeClass attrClass)
  {
-  return new AgeAttributeClassPlugPluggable(attrClass, sm);
+  return new AgeAttributeClassPlugPluggable(attrClass);
  }
 
  @Override
- public AgeClassPlug createAgeClassPlug(AgeClass cls, ContextSemanticModel mdl)
+ public AgeClassPlug createAgeClassPlug(AgeClass cls)
  {
-  return new AgeClassPlugPluggable(cls, mdl);
+  return new AgeClassPlugPluggable(cls);
  }
 
  @Override
- public AgeRelationClassPlug createAgeRelationClassPlug(AgeRelationClass relClass, ContextSemanticModel mod)
+ public AgeRelationClassPlug createAgeRelationClassPlug(AgeRelationClass relClass)
  {
-  return new AgeRelationClassPlugPluggable(relClass, mod);
+  return new AgeRelationClassPlugPluggable(relClass);
  }
 
  @Override
- public AgeRelationClassPlug createAgeRelationInverseClassPlug(AgeRelationClass relClass, ContextSemanticModel mod)
+ public AgeRelationClassPlug createAgeRelationInverseClassPlug(AgeRelationClass relClass)
  {
-  return new AgeRelationInverseClassPlugPluggable(relClass, mod);
+  return new AgeRelationInverseClassPlug(relClass);
  }
 
  @Override

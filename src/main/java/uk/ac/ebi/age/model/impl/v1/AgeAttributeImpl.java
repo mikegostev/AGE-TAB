@@ -50,6 +50,12 @@ abstract public class AgeAttributeImpl extends AttributedObject implements AgeAt
  @Override
  public AgeAttributeClass getAgeElClass()
  {
+  AgeAttributeClass cls = classReference.getAgeElClass();
+  
+  if( cls == null )
+   if( ! classReference.getPlug().plug(getMasterObject().getDataModule().getResolver()) )
+    return null;
+  
   return classReference.getAgeElClass();
  }
  

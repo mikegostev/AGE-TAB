@@ -4,4 +4,6 @@ public interface AttributeClassRef extends PropertyClassRef
 {
  @Override
  AgeAttributeClass getAgeElClass();
+
+ AgeAttributeClassPlug getPlug();
 }

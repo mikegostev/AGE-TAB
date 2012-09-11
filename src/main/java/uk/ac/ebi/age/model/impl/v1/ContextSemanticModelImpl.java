@@ -462,7 +462,7 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
   if( cls.isCustom() )
    plug = (AgeCustomClass)cls;
   else
-   plug = masterModel.getModelFactory().createAgeClassPlug(cls,this);
+   plug = masterModel.getModelFactory().createAgeClassPlug(cls);
   
   classPlugs.put(classKey, plug);
   
@@ -494,7 +494,7 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
   if(cls.isCustom())
    plug = (AgeCustomRelationClass)cls;
   else
-   plug = masterModel.getModelFactory().createAgeRelationClassPlug(cls, this);
+   plug = masterModel.getModelFactory().createAgeRelationClassPlug(cls);
 
   relClassPlugs.put(classKey, plug);
 
@@ -522,7 +522,7 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
     return plug;
   }
   
-  plug = masterModel.getModelFactory().createAgeAttributeClassPlug(cls,this);
+  plug = masterModel.getModelFactory().createAgeAttributeClassPlug(cls);
   
   attrClassPlugs.put(classKey, plug);
   

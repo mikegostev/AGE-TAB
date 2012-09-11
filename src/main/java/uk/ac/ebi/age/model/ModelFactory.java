@@ -57,13 +57,13 @@ public interface ModelFactory
  AgeRelationWritable createRelation(RelationClassRef relClassRef, AgeObjectWritable sourceObj, AgeObjectWritable targetObj);
  AgeRelationWritable createInferredInverseRelation(AgeRelationWritable dirRel);
 
- AgeAttributeClassPlug createAgeAttributeClassPlug(AgeAttributeClass attrClass, ContextSemanticModel sm);
+ AgeAttributeClassPlug createAgeAttributeClassPlug(AgeAttributeClass attrClass);
 
- AgeClassPlug createAgeClassPlug(AgeClass attrClass, ContextSemanticModel sm);
+ AgeClassPlug createAgeClassPlug(AgeClass attrClass);
 
- AgeRelationClassPlug createAgeRelationClassPlug(AgeRelationClass attrClass, ContextSemanticModel sm);
+ AgeRelationClassPlug createAgeRelationClassPlug(AgeRelationClass attrClass);
 
- AgeRelationClassPlug createAgeRelationInverseClassPlug(AgeRelationClass cls, ContextSemanticModel sm);
+ AgeRelationClassPlug createAgeRelationInverseClassPlug(AgeRelationClass cls);
 
  AgeAnnotationClassWritable createAgeAnnotationClass(String name, SemanticModel semanticModelImpl);
 

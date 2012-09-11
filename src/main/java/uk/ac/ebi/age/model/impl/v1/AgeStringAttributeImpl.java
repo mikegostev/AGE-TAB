@@ -9,7 +9,7 @@ import uk.ac.ebi.age.model.writable.AgeAttributeWritable;
 import uk.ac.ebi.age.model.writable.AttributedWritable;
 import uk.ac.ebi.mg.packedstring.PackedString;
 
-public class AgeStringAttributeImpl extends AgeAttributeImpl implements AgeAttributeWritable
+public class AgeStringAttributeImpl extends AgeAttributeImpl
 {
  private static final long serialVersionUID = 4L;
  

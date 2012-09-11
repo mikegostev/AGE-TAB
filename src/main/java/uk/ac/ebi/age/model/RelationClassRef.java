@@ -4,4 +4,6 @@ public interface RelationClassRef extends PropertyClassRef
 {
  @Override
  AgeRelationClass getAgeElClass();
+
+ AgeRelationClassPlug getPlug();
 }

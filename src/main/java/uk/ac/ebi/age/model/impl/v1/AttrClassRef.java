@@ -40,4 +40,10 @@ public class AttrClassRef implements AttributeClassRef, Serializable
   return heading;
  }
 
+ @Override
+ public AgeAttributeClassPlug getPlug()
+ {
+  return attrClassPlug;
+ }
+
 }

@@ -2,34 +2,34 @@ package uk.ac.ebi.age.model.impl.v1;
 
 import java.io.Serializable;
 
+import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeAttributeClassPlug;
-import uk.ac.ebi.age.model.SemanticModel;
-import uk.ac.ebi.age.util.Plug;
+import uk.ac.ebi.age.model.Plug;
 
 class AgeAttributeClassPlugPluggable implements Plug, Serializable, AgeAttributeClassPlug
 {
  private static final long serialVersionUID = 1L;
 
- private String className;
+ private final String className;
  private transient AgeAttributeClass ageAttributeClass = null;
- private SemanticModel model;
  
- public AgeAttributeClassPlugPluggable(AgeAttributeClass attrClass, SemanticModel mdl)
+ public AgeAttributeClassPlugPluggable(AgeAttributeClass attrClass)
  {
   ageAttributeClass=attrClass;
   className = attrClass.getName();
-  model=mdl;
  }
 
+ @Override
  public void unplug()
  {
   ageAttributeClass = null;
  }
  
- public boolean plug()
+ @Override
+ public boolean plug( AgeResolver rslv )
  {
-  ageAttributeClass = model.getDefinedAgeAttributeClass(className);
+  ageAttributeClass = rslv.getDefinedAgeAttributeClass(className);
   
   if( ageAttributeClass != null )
    return true;
@@ -37,12 +37,9 @@ class AgeAttributeClassPlugPluggable implements Plug, Serializable, AgeAttribute
   return false;
  }
  
+ @Override
  public AgeAttributeClass getAgeAttributeClass()
  {
-  if( ageAttributeClass == null )
-   if( !plug() )
-    System.err.println("Can't plug attribute class: "+className);
-  
   return ageAttributeClass;
  }
 

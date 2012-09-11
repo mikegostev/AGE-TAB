@@ -35,6 +35,12 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  @Override
  public AgeRelationClass getAgeElClass()
  {
+  AgeRelationClass cls = relClassRef.getAgeElClass();
+  
+  if( cls == null )
+   if( ! relClassRef.getPlug().plug( getSourceObject().getDataModule().getResolver() ) )
+    return null;
+  
   return relClassRef.getAgeElClass();
  }
  

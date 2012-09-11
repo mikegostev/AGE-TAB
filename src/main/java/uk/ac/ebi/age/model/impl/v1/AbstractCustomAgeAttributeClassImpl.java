@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.model.AgeAbstractClass;
 import uk.ac.ebi.age.model.AgeAnnotation;
 import uk.ac.ebi.age.model.AgeAttributeClass;
@@ -200,7 +201,7 @@ abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemantic
  }
  
  @Override
- public boolean plug()
+ public boolean plug( AgeResolver rslv )
  {
   return true;
  }

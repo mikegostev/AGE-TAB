@@ -2,34 +2,34 @@ package uk.ac.ebi.age.model.impl.v1;
 
 import java.io.Serializable;
 
+import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
-import uk.ac.ebi.age.model.SemanticModel;
-import uk.ac.ebi.age.util.Plug;
+import uk.ac.ebi.age.model.Plug;
 
 public class AgeRelationClassPlugPluggable implements Serializable, Plug, AgeRelationClassPlug
 {
  private static final long serialVersionUID = 1L;
  
- private String className;
+ private final String className;
  private transient AgeRelationClass ageRelationClass;
- private SemanticModel model;
  
- public AgeRelationClassPlugPluggable(AgeRelationClass relClass, SemanticModel mod)
+ public AgeRelationClassPlugPluggable(AgeRelationClass relClass)
  {
   ageRelationClass=relClass;
   className = relClass.getName();
-  model=mod;
  }
 
+ @Override
  public void unplug()
  {
   ageRelationClass = null;
  }
  
- public boolean plug()
+ @Override
+ public boolean plug( AgeResolver rslv )
  {
-  ageRelationClass = model.getDefinedAgeRelationClass(className);
+  ageRelationClass = rslv.getDefinedAgeRelationClass(className);
   
   if( ageRelationClass != null )
    return true;
@@ -37,11 +37,9 @@ public class AgeRelationClassPlugPluggable implements Serializable, Plug, AgeRel
   return false;
  }
  
+ @Override
  public AgeRelationClass getAgeRelationClass()
  {
-  if( ageRelationClass == null )
-   plug();
-  
   return ageRelationClass;
  }
 

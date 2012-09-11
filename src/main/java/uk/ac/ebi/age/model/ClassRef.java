@@ -7,4 +7,6 @@ public interface ClassRef
  String getHeading();
  boolean isHorizontal();
  ContextSemanticModel getSemanticModel();
+ 
+ AgeClassPlug getPlug();
 }

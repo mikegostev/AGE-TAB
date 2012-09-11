@@ -40,4 +40,10 @@ public class RelClassRef implements RelationClassRef, Serializable
   return heading;
  }
 
+ @Override
+ public AgeRelationClassPlug getPlug()
+ {
+  return relClassPlug;
+ }
+
 }

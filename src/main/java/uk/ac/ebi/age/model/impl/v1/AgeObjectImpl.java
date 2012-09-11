@@ -13,6 +13,7 @@ import uk.ac.ebi.age.ext.entity.EntityDomain;
 import uk.ac.ebi.age.model.AgeAttribute;
 import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeClass;
+import uk.ac.ebi.age.model.AgeClassPlug;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AttributedClass;
 import uk.ac.ebi.age.model.ClassRef;
@@ -163,21 +164,19 @@ class AgeObjectImpl extends AttributedObject implements Serializable, AgeObjectW
  @Override
  public AgeClass getAgeElClass()
  {
+  AgeClass cls = classRef.getAgeClass();
+  
+  if( cls == null )
+  {
+   AgeClassPlug plg = classRef.getPlug();
+   
+   if( ! plg.plug(getDataModule().getResolver() ) )
+    return null;
+  }
+  
   return classRef.getAgeClass();
  }
 
-
-
-// public Map<AgeAttributeClass, Collection<AgeAttribute> > getAttributeMap()
-// {
-//  Map< AgeAttributeClass, Collection<AgeAttribute> > map = new HashMap<AgeAttributeClass, Collection<AgeAttribute>>();
-//  
-//  for( List<? extends AgeAttribute> vals : attributes.values() )
-//   map.put(vals.get(0).getAgeElClass(), vals);
-//  
-//  return map;
-// }
- 
  @Override
  public List<AgeRelationWritable> getRelations()
  {

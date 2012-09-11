@@ -10,11 +10,11 @@ public class ClassRefImpl implements uk.ac.ebi.age.model.ClassRef, Serializable
 {
  private static final long serialVersionUID = 3L;
 
- private int order;
- private String heading;
- private AgeClassPlug classPlug;
- private boolean horizontal;
- private ContextSemanticModel model;
+ private final int order;
+ private final String heading;
+ private final AgeClassPlug classPlug;
+ private final boolean horizontal;
+ private final ContextSemanticModel model;
 
  public ClassRefImpl(AgeClassPlug cp, int order, String headingl, boolean horiz, ContextSemanticModel md )
  {
@@ -52,9 +52,17 @@ public class ClassRefImpl implements uk.ac.ebi.age.model.ClassRef, Serializable
  }
 
 
+ @Override
  public ContextSemanticModel getSemanticModel()
  {
   return model;
+ }
+
+
+ @Override
+ public AgeClassPlug getPlug()
+ {
+  return classPlug;
  }
 
 }

@@ -7,7 +7,7 @@ import uk.ac.ebi.age.model.writable.AgeAttributeWritable;
 import uk.ac.ebi.age.model.writable.AttributedWritable;
 
 
-public class AgeIntegerAttributeImpl extends AgeAttributeImpl implements AgeAttributeWritable
+public class AgeIntegerAttributeImpl extends AgeAttributeImpl
 {
  private static final long serialVersionUID = 3L;
 
