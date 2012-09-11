@@ -1,23 +1,27 @@
 package uk.ac.ebi.age.model.impl.v1;
 
 import java.io.Serializable;
+import java.lang.ref.Reference;
 
 import uk.ac.ebi.age.model.AgeAttribute;
 import uk.ac.ebi.age.model.AgeObject;
 import uk.ac.ebi.age.model.AgeObjectAttribute;
 import uk.ac.ebi.age.model.AttributeClassRef;
 import uk.ac.ebi.age.model.AttributedClass;
+import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.FormatException;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeExternalObjectAttributeWritable;
+import uk.ac.ebi.age.model.writable.AgeObjectWritable;
 import uk.ac.ebi.age.model.writable.AttributedWritable;
+import uk.ac.ebi.age.util.ReferenceFactory;
 
 public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements AgeExternalObjectAttributeWritable, Serializable
 {
  private static final long serialVersionUID = 4L;
 
  private String objId;
- private transient AgeObject target;
+ private transient Reference<AgeObjectWritable> target;
  private ResolveScope tgtScope;
 
  
@@ -31,9 +35,27 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
 
 
  @Override
- public AgeObject getValue()
+ public AgeObjectWritable getValue()
  {
-  return target;
+  AgeObjectWritable tgt = null;
+  
+  if( target != null )
+  {
+   tgt = target.get();
+   
+   if( tgt != null )
+    return tgt;
+  }
+  
+  DataModule dm = getMasterObject().getDataModule();
+
+  if( tgtScope == ResolveScope.CLUSTER || tgtScope == ResolveScope.CASCADE_CLUSTER )
+   tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+  
+  if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
+   tgt = dm.getResolver().getGlobalScopeObject(objId);
+  
+  return tgt;
  }
 
 
@@ -41,14 +63,6 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
  public String getTargetObjectId()
  {
   return objId;
- }
-
-
- @Override
- public void setTargetObject(AgeObject obj)
- {
-  target = obj;
-  objId = target.getId();
  }
 
 
@@ -87,13 +101,23 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
  {
  }
 
+
+ @Override
+ public void setTargetObject(AgeObjectWritable obj)
+ {
+  target=ReferenceFactory.getReference(obj);
+  objId=(obj).getId();
+ }
+
+
+ 
  @Override
  public void setValue(Object val)
  {
   if( val instanceof AgeObject )
   { 
-   target=(AgeObject)val;
-   objId=target.getId();
+   target=ReferenceFactory.getReference((AgeObjectWritable)val);
+   objId=((AgeObjectWritable)val).getId();
   }
  }
 

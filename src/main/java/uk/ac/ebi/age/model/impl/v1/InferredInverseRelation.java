@@ -20,7 +20,7 @@ import com.pri.util.collection.Collections;
 public class InferredInverseRelation implements AgeRelationWritable, Serializable
 {
 
- private static final long serialVersionUID = 3L;
+ private static final long serialVersionUID = 1L;
 
  private AgeRelationWritable directRel;
 

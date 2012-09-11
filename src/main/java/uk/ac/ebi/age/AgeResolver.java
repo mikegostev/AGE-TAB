@@ -6,6 +6,7 @@ import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.ModuleKey;
+import uk.ac.ebi.age.model.writable.AgeObjectWritable;
 
 public interface AgeResolver
 {
@@ -17,5 +18,8 @@ public interface AgeResolver
 
  File getAttachment(String value);
  File getAttachment(String value, String clusterId);
+
+ AgeObjectWritable getClusterScopeObject(String objId, String clusterId);
+ AgeObjectWritable getGlobalScopeObject(String objId);
 
 }

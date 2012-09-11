@@ -1,25 +1,29 @@
 package uk.ac.ebi.age.model.impl.v1;
 
 import java.io.Serializable;
+import java.lang.ref.Reference;
 
+import uk.ac.ebi.age.model.AgeRelation;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AttributedClass;
 import uk.ac.ebi.age.model.ContextSemanticModel;
+import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.RelationClassRef;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeExternalRelationWritable;
 import uk.ac.ebi.age.model.writable.AgeObjectWritable;
 import uk.ac.ebi.age.model.writable.AgeRelationWritable;
+import uk.ac.ebi.age.util.ReferenceFactory;
 
 public class AgeExternalRelationImpl extends AttributedObject implements AgeExternalRelationWritable, Serializable
 {
- private static final long serialVersionUID = 4L;
+ private static final long serialVersionUID = 1L;
 
  private final RelationClassRef relClassRef; 
  private String objId;
  private AgeObjectWritable sourceObject;
- private transient AgeExternalRelationWritable invRelation;
- private transient AgeObjectWritable target;
+ private transient Reference<AgeExternalRelationWritable> invRelation;
+ private transient Reference<AgeObjectWritable> target;
  private boolean infered;
  private ResolveScope tgtScope;
 
@@ -53,7 +57,25 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  @Override
  public AgeObjectWritable getTargetObject()
  {
-  return target;
+  AgeObjectWritable tgt = null;
+  
+  if( target != null )
+  {
+   tgt = target.get();
+   
+   if( tgt != null )
+    return tgt;
+  }
+  
+  DataModule dm = getSourceObject().getDataModule();
+
+  if( tgtScope == ResolveScope.CLUSTER || tgtScope == ResolveScope.CASCADE_CLUSTER )
+   tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+  
+  if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
+   tgt = dm.getResolver().getGlobalScopeObject(objId);
+  
+  return tgt;
  }
  
  @Override
@@ -80,7 +102,7 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  public void setTargetObject(AgeObjectWritable obj)
  {
   objId=obj.getId();
-  target = obj;
+  target = ReferenceFactory.getReference(obj);
  }
 
 
@@ -117,7 +139,31 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  @Override
  public AgeExternalRelationWritable getInverseRelation()
  {
-  return invRelation;
+  AgeExternalRelationWritable rel = null;
+  
+  if( invRelation != null )
+  {
+   rel = invRelation.get();
+   
+   if( rel != null)
+    return rel;
+  }
+  
+  for( AgeRelation r : getTargetObject().getRelations()  )
+  {
+   if( r.getAgeElClass().getInverseRelationClass() == getAgeElClass() && r.getTargetObject() == getSourceObject() )
+   {
+    rel = (AgeExternalRelationWritable)r;
+    break;
+   }
+  }
+  
+  if( rel == null )
+   return null;
+  
+  invRelation = ReferenceFactory.getReference(rel);
+  
+  return rel;
  }
 
  @Override
@@ -129,7 +175,7 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  @Override
  public void setInverseRelation(AgeExternalRelationWritable invr)
  {
-  invRelation=invr;
+  invRelation= ReferenceFactory.getReference(invr);
  }
 
  @Override
