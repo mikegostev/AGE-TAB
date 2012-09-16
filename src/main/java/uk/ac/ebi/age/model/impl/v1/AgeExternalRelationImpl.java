@@ -74,7 +74,10 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
   
   if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
    tgt = dm.getResolver().getGlobalScopeObject(objId);
-  
+ 
+  if( tgt != null )
+   target = ReferenceFactory.getReference(tgt);
+ 
   return tgt;
  }
  

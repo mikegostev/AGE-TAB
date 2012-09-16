@@ -55,6 +55,9 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
    tgt = dm.getResolver().getGlobalScopeObject(objId);
   
+  if( tgt != null )
+   target = ReferenceFactory.getReference(tgt);
+  
   return tgt;
  }
 
@@ -193,7 +196,13 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   tgtScope = scp;
  }
 
-
+ @Override
+ public synchronized void reset()
+ {
+  super.reset();
+  
+  target = null;
+ }
 
 }
 
