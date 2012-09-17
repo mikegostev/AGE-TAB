@@ -30,7 +30,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
 
 
  @Override
- public boolean isClassOrSubclass( AgeAbstractClass cl )
+ public boolean isClassOrSubclassOf( AgeAbstractClass cl )
  {
   if( cl.equals(this) && cl.isCustom() == isCustom() )
    return true;
@@ -39,7 +39,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
    return false;
   
   for( AgeAbstractClass supcls : getSuperClasses() )
-   if( supcls.isClassOrSubclass(cl) )
+   if( supcls.isClassOrSubclassOf(cl) )
     return true;
   
   return false;

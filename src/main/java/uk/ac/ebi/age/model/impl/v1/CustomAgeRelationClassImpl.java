@@ -114,7 +114,7 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
  @Override
  public boolean isWithinRange(AgeClass key)
  {
-  return key.isClassOrSubclass(rangeClass.getAgeClass());
+  return key.isClassOrSubclassOf(rangeClass.getAgeClass());
  }
 
  @Override
@@ -133,7 +133,7 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
  }
 
  @Override
- public boolean isClassOrSubclass(AgeAbstractClass cl)
+ public boolean isClassOrSubclassOf(AgeAbstractClass cl)
  {
   if( cl.equals(this) && cl.isCustom() == isCustom() )
    return true;
@@ -142,7 +142,7 @@ class CustomAgeRelationClassImpl implements AgeRelationClassWritable, AgeContext
    return false;
   
   for( AgeRelationClassPlug supclsp : superClassPlugs )
-   if( supclsp.getAgeRelationClass().isClassOrSubclass(cl) )
+   if( supclsp.getAgeRelationClass().isClassOrSubclassOf(cl) )
     return true;
   
   return false;

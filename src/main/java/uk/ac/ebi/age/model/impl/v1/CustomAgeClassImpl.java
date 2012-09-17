@@ -169,7 +169,7 @@ class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSe
  }
 
  @Override
- public boolean isClassOrSubclass(AgeAbstractClass cl)
+ public boolean isClassOrSubclassOf(AgeAbstractClass cl)
  {
   if( cl.equals(this) && cl.isCustom() == isCustom() )
    return true;
@@ -178,7 +178,7 @@ class CustomAgeClassImpl implements AgeClassWritable, Serializable, AgeContextSe
    return false;
   
   for( AgeClassPlug supclsp : superClassPlugs )
-   if( supclsp.getAgeClass().isClassOrSubclass(cl) )
+   if( supclsp.getAgeClass().isClassOrSubclassOf(cl) )
     return true;
   
   return false;

@@ -147,7 +147,7 @@ abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemantic
  }
 
  @Override
- public boolean isClassOrSubclass(AgeAbstractClass cl)
+ public boolean isClassOrSubclassOf(AgeAbstractClass cl)
  {
   if( cl.equals(this) && cl.isCustom() == isCustom() )
    return true;
@@ -156,7 +156,7 @@ abstract class AbstractCustomAgeAttributeClassImpl implements AgeContextSemantic
    return false;
   
   for( AgeAttributeClassPlug supclsp : superClassPlugs )
-   if( supclsp.getAgeAttributeClass().isClassOrSubclass(cl) )
+   if( supclsp.getAgeAttributeClass().isClassOrSubclassOf(cl) )
     return true;
   
   return false;

@@ -89,7 +89,7 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
    return true;
   
   for( AgeClass rgCls : range )
-   if( key.isClassOrSubclass(rgCls) )
+   if( key.isClassOrSubclassOf(rgCls) )
     return true;
   
   return false;
@@ -102,7 +102,7 @@ class AgeRelationClassImpl extends AgeAbstractClassImpl implements AgeRelationCl
    return true;
   
   for( AgeClass rgCls : domain )
-   if( key.isClassOrSubclass(rgCls) )
+   if( key.isClassOrSubclassOf(rgCls) )
     return true;
   
   return false;

@@ -197,7 +197,7 @@ public abstract class AttributedObject implements AttributedWritable, AgeContext
   {
    for( AgeAttributeWritable  at : attributes )
    {
-    if( at.getAgeElClass().isClassOrSubclass(cls) )
+    if( at.getAgeElClass().isClassOrSubclassOf(cls) )
      lst.add(at);
    }
   }

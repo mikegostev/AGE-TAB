@@ -1,14 +1,11 @@
 package uk.ac.ebi.age.model.writable;
 
 import java.util.Collection;
-import java.util.Map;
 
 import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.ModuleKey;
 import uk.ac.ebi.age.model.SemanticModel;
-
-import com.pri.util.Counter;
 
 public interface DataModuleWritable extends DataModule
 {
@@ -35,8 +32,6 @@ public interface DataModuleWritable extends DataModule
  @Override
  Collection<? extends AttributedWritable> getAttributed( AttributedSelector sel );
 
- Map<ModuleKey,Counter> getObjectConnections();
- 
  void registerExternalRelation( AgeExternalRelationWritable rel );
  
  void pack();

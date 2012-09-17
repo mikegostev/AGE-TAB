@@ -207,7 +207,7 @@ class AgeObjectImpl extends AttributedObject implements Serializable, AgeObjectW
   
   for( Map.Entry<AgeRelationClass,List<AgeRelationWritable>> me : map.entrySet() )
   {
-   if( me.getKey().isClassOrSubclass(cls) )
+   if( me.getKey().isClassOrSubclassOf(cls) )
     lst.addAll(me.getValue());
   }
   

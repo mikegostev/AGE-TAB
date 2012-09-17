@@ -163,7 +163,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
    
    for( AgeRelation r : rels )
    {
-    if( r.getAgeElClass().isClassOrSubclass(rlCls) )
+    if( r.getAgeElClass().isClassOrSubclassOf(rlCls) )
      byClassRels.add(r);
    }
    
@@ -328,7 +328,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
     
     for( AgeRelation r : auxRels )
     {
-     if( r.getAgeElClass().isClassOrSubclass(rlCls) || remRels == null || ! remRels.contains( r ) )
+     if( r.getAgeElClass().isClassOrSubclassOf(rlCls) || remRels == null || ! remRels.contains( r ) )
       byClassRels.add(r);
     }
  
@@ -558,7 +558,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
     continue;
    }
    
-   if(!((rul.isSubclassesIncluded() && rslvAtCls.isClassOrSubclass(rul.getAttributeClass())) || rul.getAttributeClass().equals(rslvAtCls)))
+   if(!((rul.isSubclassesIncluded() && rslvAtCls.isClassOrSubclassOf(rul.getAttributeClass())) || rul.getAttributeClass().equals(rslvAtCls)))
    {
     ln.log(Level.DEBUG, "Rule doesn't match attribute class ("+rslvAtCls.getName()+"). Skiping rule.");
     continue;
@@ -621,7 +621,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
   {
    LogNode ln = log.branch("Validating rule "+rul.getRuleId()+" Relation class: '"+rul.getRelationClass().getName()+"' Target class: '"+rul.getTargetClass().getName()+"'");
 
-   if(!((rul.isSubclassesIncluded() && rslvRlCls.isClassOrSubclass(rul.getRelationClass())) || rul.getRelationClass().equals(rslvRlCls)))
+   if(!((rul.isSubclassesIncluded() && rslvRlCls.isClassOrSubclassOf(rul.getRelationClass())) || rul.getRelationClass().equals(rslvRlCls)))
    {
     ln.log(Level.DEBUG, "Rule "+rul.getRuleId()+" doesn't match class '"+rslvRlCls+"'. Skiping.");
     continue;
@@ -806,7 +806,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
   
   for( AgeRelation r : rels )
   {
-   if( r.getAgeElClass().isClassOrSubclass(origRelCls) )
+   if( r.getAgeElClass().isClassOrSubclassOf(origRelCls) )
     clsRels.add(r);
   }
   
@@ -1076,7 +1076,7 @@ public class AgeSemanticValidatorImpl implements AgeSemanticValidator
         return false;
        }
        
-       if(rslvAtc.isClassOrSubclass(qr.getAttributeClass()))
+       if(rslvAtc.isClassOrSubclassOf(qr.getAttributeClass()))
        {
         found = true;
         break;

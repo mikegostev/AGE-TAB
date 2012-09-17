@@ -1153,7 +1153,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
      
      for( AgeClass dmcls : rCls.getDomain() )
      {
-      if( blkOwner.isClassOrSubclass(dmcls) )
+      if( blkOwner.isClassOrSubclassOf(dmcls) )
       {
        found=true;
        break;
@@ -1552,7 +1552,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
     {
      for(AgeClass rgClass : rngSet )
      {
-      if( me.getKey().isClassOrSubclass(rgClass))
+      if( me.getKey().isClassOrSubclassOf(rgClass))
       {
        rangeObjects.add(me.getValue());
        break;

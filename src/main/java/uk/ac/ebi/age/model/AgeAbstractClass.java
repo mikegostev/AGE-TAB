@@ -7,7 +7,7 @@ public interface AgeAbstractClass
  Collection<? extends AgeAbstractClass> getSuperClasses();
  Collection<? extends AgeAbstractClass> getSubClasses();
  
- boolean isClassOrSubclass( AgeAbstractClass cl );
+ boolean isClassOrSubclassOf( AgeAbstractClass cl );
  
  String getName();
 
