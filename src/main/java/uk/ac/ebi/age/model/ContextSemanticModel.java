@@ -22,6 +22,7 @@ public interface ContextSemanticModel extends SemanticModel
  AgeAttributeClassWritable getOrCreateCustomAgeAttributeClass(String name, DataType type, AgeClass owner, AgeAttributeClassWritable superClass);
  AgeRelationClassWritable getOrCreateCustomAgeRelationClass(String name, AgeClass range, AgeClass owner, AgeRelationClass superClass);
 
+ @Override
  AgePropertyClass getDefinedAgeClassProperty( String name );
 
  DataModuleWritable createDataModule();
@@ -40,11 +41,14 @@ public interface ContextSemanticModel extends SemanticModel
  AgeAttributeWritable createAgeFileAttribute(AttributeClassRef attrClass, AttributedWritable host, ResolveScope scope);
  AgeObjectWritable createAgeObject( ClassRef clsR, String id);
  
- AgeExternalRelationWritable createExternalRelation(RelationClassRef clsRef, AgeObjectWritable sourceObj, String val, ResolveScope scope );
  AgeAttributeWritable createExternalObjectAttribute( AttributeClassRef atCls, AttributedWritable host, String val, ResolveScope scope );
+ CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef attrClass, AttributedWritable attributedObject, String val,    ResolveScope scope);
+
  AgeRelationWritable createAgeRelation(RelationClassRef clsRef, AgeObjectWritable sourceObj, AgeObjectWritable targetObj);
+ AgeExternalRelationWritable createExternalRelation(RelationClassRef clsRef, AgeObjectWritable sourceObj, String val, ResolveScope scope );
 
  AgeRelationWritable createInferredInverseRelation(AgeRelationWritable rl);
+
 
 
 }

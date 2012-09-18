@@ -17,4 +17,6 @@ public interface AgeAbstractClass
  Collection<AgeAnnotation> getAnnotations();
  
  Collection<String> getAliases();
+ 
+ SemanticModel getSemanticModel();
 }

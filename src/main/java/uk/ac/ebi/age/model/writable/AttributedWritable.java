@@ -5,6 +5,7 @@ import java.util.List;
 import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AttributeClassRef;
 import uk.ac.ebi.age.model.Attributed;
+import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ResolveScope;
 
 
@@ -12,6 +13,7 @@ public interface AttributedWritable extends Attributed
 {
  AgeAttributeWritable createAgeAttribute(AttributeClassRef attrClass);
  AgeAttributeWritable createExternalObjectAttribute(AttributeClassRef attrClass, String val, ResolveScope scope );
+ CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef attrClass, String val, ResolveScope scope );
 
  
  @Override

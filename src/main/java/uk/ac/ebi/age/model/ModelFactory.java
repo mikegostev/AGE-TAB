@@ -42,6 +42,9 @@ public interface ModelFactory
  AgeAttributeWritable createExternalObjectAttribute(AttributeClassRef atCls, AttributedWritable host, String id,
    ResolveScope scope);
 
+ CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef atCls, AttributedWritable host, String id,
+   ResolveScope scope);
+
  AgeAttributeWritable createAgeStringAttribute(AttributeClassRef attrClass, AttributedWritable host);
 
  AgeAttributeWritable createAgeIntegerAttribute(AttributeClassRef attrClass, AttributedWritable host);

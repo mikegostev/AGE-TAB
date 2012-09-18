@@ -47,7 +47,7 @@ public class AgeTabObject
   return values.get(col);
  }
  
- public int getRow()
+ public int getOrder()
  {
   return row;
  }

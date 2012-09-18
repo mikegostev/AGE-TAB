@@ -10,6 +10,7 @@ import uk.ac.ebi.age.model.AttributeClassRef;
 import uk.ac.ebi.age.model.AttributedClass;
 import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.FormatException;
+import uk.ac.ebi.age.model.IdScope;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeExternalObjectAttributeWritable;
 import uk.ac.ebi.age.model.writable.AgeObjectWritable;
@@ -49,11 +50,10 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   
   DataModule dm = getMasterObject().getDataModule();
 
-  if( tgtScope == ResolveScope.CLUSTER || tgtScope == ResolveScope.CASCADE_CLUSTER )
-   tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
-  
-  if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
+  if( getResolvedScope() == IdScope.GLOBAL )
    tgt = dm.getResolver().getGlobalScopeObject(objId);
+  else
+   tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
   
   if( tgt != null )
    target = ReferenceFactory.getReference(tgt);
@@ -61,6 +61,20 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   return tgt;
  }
 
+ @Override
+ public IdScope getResolvedScope()
+ {
+  if( tgtScope == ResolveScope.CLUSTER )
+   return IdScope.CLUSTER;
+
+  if( tgtScope == ResolveScope.GLOBAL )
+   return IdScope.GLOBAL;
+
+  if( tgtScope == ResolveScope.MODULE )
+   return IdScope.MODULE;
+
+  return IdScope.CLUSTER;
+ }
 
  @Override
  public String getTargetObjectId()

@@ -10,6 +10,7 @@ import uk.ac.ebi.age.model.AgeClassPlug;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
 import uk.ac.ebi.age.model.AttributeClassRef;
+import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ClassRef;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.DataType;
@@ -111,6 +112,12 @@ public class ModelFactoryImpl  implements Serializable, ModelFactory
   return v1factory.createExternalObjectAttribute(atCls, host, id, glb);
  }
 
+ @Override
+ public CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef atCls, AttributedWritable host, String id, ResolveScope scope)
+ {
+  return v1factory.createCascadeExternalObjectAttribute(atCls, host, id, scope);
+ }
+ 
  @Override
  public AgeRelationWritable createRelation(RelationClassRef rClsR, AgeObjectWritable sourceObj, AgeObjectWritable targetObj)
  {

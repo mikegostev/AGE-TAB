@@ -32,7 +32,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
  @Override
  public boolean isClassOrSubclassOf( AgeAbstractClass cl )
  {
-  if( cl.equals(this) && cl.isCustom() == isCustom() )
+  if( cl.equals(this) && cl.isCustom() == isCustom()  && cl.getSemanticModel() == getSemanticModel() )
    return true;
   
   if( getSuperClasses() == null )
@@ -85,6 +85,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
   
   Collector.collectFromHierarchy(this,allRest, new Collector<Collection<AttributeAttachmentRule>>(){
 
+   @Override
    public Collection<AttributeAttachmentRule> get(AgeAbstractClass cls)
    {
     Collection<AttributeAttachmentRule> restr = ((AgeClass)cls).getAttributeAttachmentRules();

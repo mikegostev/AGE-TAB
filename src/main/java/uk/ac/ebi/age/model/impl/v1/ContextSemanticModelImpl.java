@@ -18,6 +18,7 @@ import uk.ac.ebi.age.model.AgePropertyClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
 import uk.ac.ebi.age.model.AttributeClassRef;
+import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ClassRef;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.DataType;
@@ -219,18 +220,11 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
   return masterModel.getModelFactory().createExternalObjectAttribute(atCls, host, val, scope );
  }
 
-// public AgeRelationClass createRelationClass(String name, AgeClass cls, AgeClass rangeCls)
-// {
-//  AgeRelationClass rcls = masterModel.createAgeRelationClass(name);
-//  
-//  rcls.addDomainClass(cls);
-//  rcls.addRangeClass(rangeCls);
-//  
-//  rcls.setCustom( true );
-// 
-//  return rcls;
-// }
-
+ @Override
+ public CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef atCls, AttributedWritable host, String val, ResolveScope scope)
+ {
+  return masterModel.getModelFactory().createCascadeExternalObjectAttribute(atCls, host, val, scope);
+ }
 
  @Override
  public AgeClass getDefinedAgeClass(String name)

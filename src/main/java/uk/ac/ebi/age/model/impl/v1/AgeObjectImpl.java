@@ -269,6 +269,24 @@ class AgeObjectImpl extends AttributedObject implements Serializable, AgeObjectW
  }
 
  @Override
+ public int getRow()
+ {
+  if( getClassReference().isHorizontal() )
+   return order;
+  
+  return getClassReference().getOrder();
+ }
+ 
+ @Override
+ public int getCol()
+ {
+  if( getClassReference().isHorizontal() )
+   return 0;
+  
+  return order;
+ }
+ 
+ @Override
  public DataModuleWritable getDataModule()
  {
   return module;

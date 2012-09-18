@@ -116,7 +116,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
      if( obj == null )
      {
       obj = sm.createAgeObject(clsRef, profileDef.getPrototypeObjectId());
-      obj.setOrder( atObj.getRow() );
+      obj.setOrder( atObj.getOrder() );
       
       prototypeMap.put(cls, obj);
      }
@@ -141,11 +141,17 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
      }
      
      obj = sm.createAgeObject(clsRef, id);
-     obj.setOrder( atObj.getRow() );
+     obj.setOrder( atObj.getOrder() );
      obj.setId(id);
      obj.setIdScope(atObj.getIdScope());
      
      objectMap.put(atObj.getId(), obj);
+     
+     if( cls.isCustom() && ( cls.getSuperClasses() == null || cls.getSuperClasses().size() == 0) && atObj.getIdScope() != IdScope.MODULE )
+     {
+      result = false;
+      blkLog.log(Level.ERROR, "Object of custom class can be visible within module scope only. Current scope: "+atObj.getIdScope().name()+". Row: "+obj.getRow()+" Col: "+obj.getCol());
+     }
     }
    }
   }
@@ -186,7 +192,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
       ClassRef clsRef = sm.getModelFactory().createClassRef(sm.getAgeClassPlug(me.getValue()), colHdr.getRow(), colHdr.getOriginalReference(), me.getKey().isHorizontal(), sm);
 
       obj = sm.createAgeObject(clsRef, profileDef.getPrototypeObjectId());
-      obj.setOrder( atObj.getRow() );
+      obj.setOrder( atObj.getOrder() );
       
       prototypeMap.put(me.getValue(), obj);
      }
@@ -1419,13 +1425,16 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
    AgeObjectWritable targetObj = null;
 
-   if(rangeObjects != null)
+   if( (scope == ResolveScope.MODULE || scope == ResolveScope.CASCADE_MODULE ) && rangeObjects != null)
     targetObj = rangeObjects.get(val);
 
    AgeAttributeWritable obAttr = null;
    if(targetObj == null)
    {
-    obAttr = prop.createExternalObjectAttribute( classRef, val, scope );
+    if( scope == ResolveScope.CASCADE_CLUSTER || scope == ResolveScope.CASCADE_MODULE )
+     obAttr = prop.createCascadeExternalObjectAttribute(classRef, val, scope);
+    else
+     obAttr = prop.createExternalObjectAttribute( classRef, val, scope );
    }
    else
    {

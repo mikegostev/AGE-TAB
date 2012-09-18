@@ -12,6 +12,7 @@ import java.util.Set;
 import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeContextSemanticElement;
 import uk.ac.ebi.age.model.AttributeClassRef;
+import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeAttributeWritable;
 import uk.ac.ebi.age.model.writable.AttributedWritable;
@@ -71,6 +72,16 @@ public abstract class AttributedObject implements AttributedWritable, AgeContext
  public AgeAttributeWritable createExternalObjectAttribute( AttributeClassRef attrClass, String val, ResolveScope scope  )
  {
   AgeAttributeWritable attr = getSemanticModel().createExternalObjectAttribute(  attrClass, this, val, scope );
+
+  addAttribute(attr);
+
+  return attr;
+ }
+ 
+ @Override
+ public CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef attrClass, String val, ResolveScope scope)
+ {
+  CascadeExternalObjectAttribute attr = getSemanticModel().createCascadeExternalObjectAttribute(  attrClass, this, val, scope );
 
   addAttribute(attr);
 

@@ -8,6 +8,7 @@ import uk.ac.ebi.age.model.AgeAttributeClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AttributeClassRef;
 import uk.ac.ebi.age.model.AttributedClass;
+import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.RelationClassRef;
 import uk.ac.ebi.age.model.ResolveScope;
@@ -98,6 +99,12 @@ public class InferredInverseRelation implements AgeRelationWritable, Serializabl
 
  @Override
  public AgeAttributeWritable createExternalObjectAttribute(AttributeClassRef attrClass, String val, ResolveScope scope)
+ {
+  throw new UnsupportedOperationException();
+ }
+ 
+ @Override
+ public CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef attrClass, String val, ResolveScope scope)
  {
   throw new UnsupportedOperationException();
  }

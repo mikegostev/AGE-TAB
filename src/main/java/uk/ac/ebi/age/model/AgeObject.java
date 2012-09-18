@@ -17,6 +17,7 @@ public interface AgeObject extends AgeAbstractObject, Entity
  IdScope getIdScope();
 // String getOriginalId();
 
+ @Override
  AgeClass getAgeElClass();
  ClassRef getClassReference();
  
@@ -34,6 +35,8 @@ public interface AgeObject extends AgeAbstractObject, Entity
  Object getAttributeValue( AgeAttributeClass cls );
  
  int getOrder();
+ int getRow();
+ int getCol();
 
  ModuleKey getModuleKey();
  DataModule getDataModule();
