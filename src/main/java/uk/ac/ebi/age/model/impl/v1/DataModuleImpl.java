@@ -13,6 +13,7 @@ import uk.ac.ebi.age.AgeResolver;
 import uk.ac.ebi.age.ext.entity.ClusterEntity;
 import uk.ac.ebi.age.ext.entity.Entity;
 import uk.ac.ebi.age.ext.entity.EntityDomain;
+import uk.ac.ebi.age.model.AgeObject;
 import uk.ac.ebi.age.model.AgeRelation;
 import uk.ac.ebi.age.model.Attributed;
 import uk.ac.ebi.age.model.ContextSemanticModel;
@@ -286,6 +287,12 @@ class DataModuleImpl  implements DataModuleWritable, Serializable
      if( ! atbt.getAttributes().isEmpty() )
      {
       stk.add(cIter = atbt.getAttributes().iterator());
+      last++;
+     }
+     
+     if( (atbt instanceof AgeObject) && ((AgeObject)atbt).getRelations() != null && !((AgeObject)atbt).getRelations().isEmpty() )
+     {
+      stk.add(cIter = ((AgeObject)atbt).getRelations().iterator());
       last++;
      }
      
