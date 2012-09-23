@@ -26,6 +26,7 @@ public class ClassSpecificSyntaxProfileDefinitionImpl implements SyntaxProfileDe
  private String  moduleResolveScopePrefix; 
  private String  moduleCascadeResolveScopePrefix;
  private String  clusterCascadeResolveScopePrefix;
+ private String  globalFallbackResolveScopePrefix;
  private String  defaultResolveScopePrefix;
 
  private String  horizontalBlockPrefix;
@@ -229,6 +230,7 @@ public class ClassSpecificSyntaxProfileDefinitionImpl implements SyntaxProfileDe
   this.defaultIdScope = defaultScope;
  }
 
+ @Override
  public boolean allowImplicitCustomClasses()
  {
   if( allowImplicitCustomClasses != null )
@@ -419,6 +421,20 @@ public class ClassSpecificSyntaxProfileDefinitionImpl implements SyntaxProfileDe
    return defaultEmbeddedObjectAttributeSeparator;
   
   return commonProfileDefinition.getDefaultEmbeddedObjectAttributeSeparator();
+ }
+
+ @Override
+ public String getGlobalFallbackResolveScopePrefix()
+ {
+  if( globalFallbackResolveScopePrefix != null )
+   return globalFallbackResolveScopePrefix;
+  
+  return commonProfileDefinition.getGlobalFallbackResolveScopePrefix();
+ }
+
+ public void setGlobalFallbackResolveScopePrefix(String globalFallbackResolveScopePrefix)
+ {
+  this.globalFallbackResolveScopePrefix = globalFallbackResolveScopePrefix;
  }
 
 }

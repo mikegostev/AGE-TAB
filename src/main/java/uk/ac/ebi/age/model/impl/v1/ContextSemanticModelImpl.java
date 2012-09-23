@@ -18,7 +18,6 @@ import uk.ac.ebi.age.model.AgePropertyClass;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AgeRelationClassPlug;
 import uk.ac.ebi.age.model.AttributeClassRef;
-import uk.ac.ebi.age.model.CascadeExternalObjectAttribute;
 import uk.ac.ebi.age.model.ClassRef;
 import uk.ac.ebi.age.model.ContextSemanticModel;
 import uk.ac.ebi.age.model.DataType;
@@ -220,11 +219,6 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
   return masterModel.getModelFactory().createExternalObjectAttribute(atCls, host, val, scope );
  }
 
- @Override
- public CascadeExternalObjectAttribute createCascadeExternalObjectAttribute(AttributeClassRef atCls, AttributedWritable host, String val, ResolveScope scope)
- {
-  return masterModel.getModelFactory().createCascadeExternalObjectAttribute(atCls, host, val, scope);
- }
 
  @Override
  public AgeClass getDefinedAgeClass(String name)
@@ -377,7 +371,7 @@ public class ContextSemanticModelImpl implements ContextSemanticModel, Serializa
     return masterModel.getModelFactory().createAgeStringAttribute(attrClass, host);
 
    case FILE:
-    return masterModel.getModelFactory().createAgeFileAttribute(attrClass, host, ResolveScope.CASCADE_CLUSTER);
+    return masterModel.getModelFactory().createAgeFileAttribute(attrClass, host, ResolveScope.CLUSTER_CASCADE);
     
    case OBJECT:
     return masterModel.getModelFactory().createAgeObjectAttribute(attrClass, host);

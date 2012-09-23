@@ -3,16 +3,17 @@ package uk.ac.ebi.age.model.impl.v1;
 import java.io.Serializable;
 import java.lang.ref.Reference;
 
+import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeRelation;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.AttributedClass;
 import uk.ac.ebi.age.model.ContextSemanticModel;
-import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.RelationClassRef;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeExternalRelationWritable;
 import uk.ac.ebi.age.model.writable.AgeObjectWritable;
 import uk.ac.ebi.age.model.writable.AgeRelationWritable;
+import uk.ac.ebi.age.model.writable.DataModuleWritable;
 import uk.ac.ebi.age.util.ReferenceFactory;
 
 public class AgeExternalRelationImpl extends AttributedObject implements AgeExternalRelationWritable, Serializable
@@ -57,6 +58,7 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
  @Override
  public AgeObjectWritable getTargetObject()
  {
+  
   AgeObjectWritable tgt = null;
   
   if( target != null )
@@ -67,17 +69,46 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
     return tgt;
   }
   
-  DataModule dm = getSourceObject().getDataModule();
+  DataModuleWritable dm = getSourceObject().getDataModule();
 
-  if( tgtScope == ResolveScope.CLUSTER || tgtScope == ResolveScope.CASCADE_CLUSTER )
+  if( getTargetResolveScope() != ResolveScope.GLOBAL || getTargetResolveScope() != ResolveScope.GLOBAL_FALLBACK )
    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+
+  if( tgt == null && getTargetResolveScope() == ResolveScope.CLUSTER )
+   return null;
   
-  if( tgt == null && ( tgtScope == ResolveScope.CASCADE_CLUSTER || tgtScope == ResolveScope.GLOBAL ) )
-   tgt = dm.getResolver().getGlobalScopeObject(objId);
+  tgt = dm.getResolver().getGlobalScopeObject(objId);
+  
+  if( getTargetResolveScope() == ResolveScope.GLOBAL_FALLBACK )
+  {
+   if( tgt != null )
+   {
+    
+    if( getAgeElClass().getDomain() != null )
+    {
+     boolean found = false;
+     for( AgeClass dc : getAgeElClass().getDomain() )
+     {
+      if( tgt.getAgeElClass().isClassOrSubclassOf(dc) )
+      {
+       found = true;
+       break;
+      }
+     }
+     
+     if( ! found )
+      tgt = null;
+    }
+   }
+   
+   if( tgt == null )
+    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
  
+  }
+  
   if( tgt != null )
    target = ReferenceFactory.getReference(tgt);
- 
+  
   return tgt;
  }
  
@@ -154,7 +185,8 @@ public class AgeExternalRelationImpl extends AttributedObject implements AgeExte
   
   for( AgeRelation r : getTargetObject().getRelations()  )
   {
-   if( r.getAgeElClass().getInverseRelationClass() == getAgeElClass() && r.getTargetObject() == getSourceObject() )
+   // Comparing object ID before actual object comparing to minimize unnecessary module loading 
+   if( r.getAgeElClass().getInverseRelationClass() == getAgeElClass() && r.getTargetObjectId().equals(getSourceObject().getId() ) && r.getTargetObject() == getSourceObject() )
    {
     rel = (AgeExternalRelationWritable)r;
     break;

@@ -9,5 +9,4 @@ public interface AgeExternalObjectAttribute extends AgeObjectAttribute, Resolvab
  @Override
  ResolveScope getTargetResolveScope();
  
- IdScope getResolvedScope();
 }

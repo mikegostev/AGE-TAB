@@ -28,6 +28,7 @@ public class SyntaxProfileDefinitionImpl implements SyntaxProfileDefinition
  private String       moduleResolveScopePrefix         = AgeDefaultSyntaxProfileDefinition.moduleResolveScopePrefix;
  private String       moduleCascadeResolveScopePrefix  = AgeDefaultSyntaxProfileDefinition.moduleCascadeResolveScopePrefix;
  private String       clusterCascadeResolveScopePrefix = AgeDefaultSyntaxProfileDefinition.clusterCascadeResolveScopePrefix;
+ private String       globalFallbackResolveScopePrefix = AgeDefaultSyntaxProfileDefinition.globalFallbackResolveScopePrefix;
  private String       defaultResolveScopePrefix        = AgeDefaultSyntaxProfileDefinition.defaultResolveScopePrefix;
  
  private String defaultEmbeddedObjectAttributeSeparator= AgeDefaultSyntaxProfileDefinition.defaultEmbeddedObjectAttributeSeparator;
@@ -326,6 +327,7 @@ public class SyntaxProfileDefinitionImpl implements SyntaxProfileDefinition
   this.defaultEmbeddedObjectAttributeSeparator = defaultEmbeddedObjectAttributeSeparator;
  }
 
+ @Override
  public boolean allowImplicitCustomClasses()
  {
   return allowImplicitCustomClasses;
@@ -334,5 +336,16 @@ public class SyntaxProfileDefinitionImpl implements SyntaxProfileDefinition
  public void setAllowImplicitCustomClasses(boolean allowImplicitCustomClasses)
  {
   this.allowImplicitCustomClasses = allowImplicitCustomClasses;
+ }
+
+ @Override
+ public String getGlobalFallbackResolveScopePrefix()
+ {
+  return   this.globalFallbackResolveScopePrefix;
+ }
+ 
+ public void setGlobalFallbackResolveScopePrefix( String globalFallbackResolveScopePrefix )
+ {
+  this.globalFallbackResolveScopePrefix=globalFallbackResolveScopePrefix;
  }
 }

@@ -26,6 +26,7 @@ public class AgeDefaultSyntaxProfileDefinition implements SyntaxProfileDefinitio
  public static final String moduleResolveScopePrefix="M::";
  public static final String moduleCascadeResolveScopePrefix="MC::";
  public static final String clusterCascadeResolveScopePrefix="CC::";
+ public static final String globalFallbackResolveScopePrefix="GF::";
  public static final String defaultResolveScopePrefix="D::";
 
  public static final String defaultEmbeddedObjectAttributeSeparator=": ";
@@ -38,9 +39,9 @@ public class AgeDefaultSyntaxProfileDefinition implements SyntaxProfileDefinitio
  public static final boolean resetPrototype = true;
  public static final boolean allowImplicitCustomClasses = false;
  
- public static final ResolveScope defaultObjectAttributeResolveScope = ResolveScope.CASCADE_MODULE;
- public static final ResolveScope defaultFileAttributeResolveScope = ResolveScope.CASCADE_CLUSTER;
- public static final ResolveScope defaultRelationResolveScope = ResolveScope.CASCADE_MODULE;
+ public static final ResolveScope defaultObjectAttributeResolveScope = ResolveScope.MODULE_CASCADE;
+ public static final ResolveScope defaultFileAttributeResolveScope = ResolveScope.CLUSTER_CASCADE;
+ public static final ResolveScope defaultRelationResolveScope = ResolveScope.MODULE_CASCADE;
  
  private static AgeDefaultSyntaxProfileDefinition instance  = new AgeDefaultSyntaxProfileDefinition();
  
@@ -213,6 +214,12 @@ public class AgeDefaultSyntaxProfileDefinition implements SyntaxProfileDefinitio
  public boolean allowImplicitCustomClasses()
  {
   return allowImplicitCustomClasses;
+ }
+
+ @Override
+ public String getGlobalFallbackResolveScopePrefix()
+ {
+  return globalFallbackResolveScopePrefix;
  }
 
 }

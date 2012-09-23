@@ -8,13 +8,12 @@ import uk.ac.ebi.age.model.AgeObject;
 import uk.ac.ebi.age.model.AgeObjectAttribute;
 import uk.ac.ebi.age.model.AttributeClassRef;
 import uk.ac.ebi.age.model.AttributedClass;
-import uk.ac.ebi.age.model.DataModule;
 import uk.ac.ebi.age.model.FormatException;
-import uk.ac.ebi.age.model.IdScope;
 import uk.ac.ebi.age.model.ResolveScope;
 import uk.ac.ebi.age.model.writable.AgeExternalObjectAttributeWritable;
 import uk.ac.ebi.age.model.writable.AgeObjectWritable;
 import uk.ac.ebi.age.model.writable.AttributedWritable;
+import uk.ac.ebi.age.model.writable.DataModuleWritable;
 import uk.ac.ebi.age.util.ReferenceFactory;
 
 public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements AgeExternalObjectAttributeWritable, Serializable
@@ -48,12 +47,25 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
     return tgt;
   }
   
-  DataModule dm = getMasterObject().getDataModule();
+  DataModuleWritable dm = getMasterObject().getDataModule();
 
-  if( getResolvedScope() == IdScope.GLOBAL )
-   tgt = dm.getResolver().getGlobalScopeObject(objId);
-  else
+  if( getTargetResolveScope() != ResolveScope.GLOBAL || getTargetResolveScope() != ResolveScope.GLOBAL_FALLBACK )
    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+
+  if( tgt == null && getTargetResolveScope() == ResolveScope.CLUSTER )
+   return null;
+  
+  tgt = dm.getResolver().getGlobalScopeObject(objId);
+  
+  if( getTargetResolveScope() == ResolveScope.GLOBAL_FALLBACK )
+  {
+   if( tgt != null && ! tgt.getAgeElClass().isClassOrSubclassOf(getAgeElClass().getTargetClass()))
+    tgt=null;
+   
+   if( tgt == null )
+    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+ 
+  }
   
   if( tgt != null )
    target = ReferenceFactory.getReference(tgt);
@@ -61,20 +73,6 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   return tgt;
  }
 
- @Override
- public IdScope getResolvedScope()
- {
-  if( tgtScope == ResolveScope.CLUSTER )
-   return IdScope.CLUSTER;
-
-  if( tgtScope == ResolveScope.GLOBAL )
-   return IdScope.GLOBAL;
-
-  if( tgtScope == ResolveScope.MODULE )
-   return IdScope.MODULE;
-
-  return IdScope.CLUSTER;
- }
 
  @Override
  public String getTargetObjectId()

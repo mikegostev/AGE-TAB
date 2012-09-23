@@ -1341,9 +1341,15 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    else if( atVal.matchPrefix( profDef.getClusterCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_CLUSTER;
+    scope =  ResolveScope.CLUSTER_CASCADE;
    
     val = atVal.getValue().substring(profDef.getClusterCascadeResolveScopePrefix().length());
+   }
+   else if( atVal.matchPrefix( profDef.getGlobalFallbackResolveScopePrefix() ) )
+   {
+    scope =  ResolveScope.GLOBAL_FALLBACK;
+   
+    val = atVal.getValue().substring(profDef.getGlobalFallbackResolveScopePrefix().length());
    }
    else if( atVal.matchPrefix( profDef.getDefaultResolveScopePrefix() ) )
    {
@@ -1397,15 +1403,21 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    else if( atVal.matchPrefix( profDef.getModuleCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_MODULE;
+    scope =  ResolveScope.MODULE_CASCADE;
    
     val = atVal.getValue().substring(profDef.getModuleCascadeResolveScopePrefix().length());
    }
    else if( atVal.matchPrefix( profDef.getClusterCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_CLUSTER;
+    scope =  ResolveScope.CLUSTER_CASCADE;
    
     val = atVal.getValue().substring(profDef.getClusterCascadeResolveScopePrefix().length());
+   }
+   else if( atVal.matchPrefix( profDef.getGlobalFallbackResolveScopePrefix() ) )
+   {
+    scope =  ResolveScope.GLOBAL_FALLBACK;
+   
+    val = atVal.getValue().substring(profDef.getGlobalFallbackResolveScopePrefix().length());
    }
    else if( atVal.matchPrefix( profDef.getDefaultResolveScopePrefix() ) )
    {
@@ -1425,17 +1437,12 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
    AgeObjectWritable targetObj = null;
 
-   if( (scope == ResolveScope.MODULE || scope == ResolveScope.CASCADE_MODULE ) && rangeObjects != null)
+   if( (scope == ResolveScope.MODULE || scope == ResolveScope.MODULE_CASCADE ) && rangeObjects != null)
     targetObj = rangeObjects.get(val);
 
    AgeAttributeWritable obAttr = null;
    if(targetObj == null)
-   {
-    if( scope == ResolveScope.CASCADE_CLUSTER || scope == ResolveScope.CASCADE_MODULE )
-     obAttr = prop.createCascadeExternalObjectAttribute(classRef, val, scope);
-    else
      obAttr = prop.createExternalObjectAttribute( classRef, val, scope );
-   }
    else
    {
     obAttr = prop.createAgeAttribute(classRef);
@@ -1477,13 +1484,13 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    else if( atVal.matchPrefix( profDef.getModuleCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_MODULE;
+    scope =  ResolveScope.MODULE_CASCADE;
    
     val = atVal.getValue().substring(profDef.getModuleCascadeResolveScopePrefix().length());
    }
    else if( atVal.matchPrefix( profDef.getClusterCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_CLUSTER;
+    scope =  ResolveScope.CLUSTER_CASCADE;
    
     val = atVal.getValue().substring(profDef.getClusterCascadeResolveScopePrefix().length());
    }
@@ -1505,7 +1512,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
 
    AgeObjectWritable targetObj = null;
 
-   if( scope == ResolveScope.MODULE || scope == ResolveScope.CASCADE_MODULE )
+   if( scope == ResolveScope.MODULE || scope == ResolveScope.MODULE_CASCADE )
    {
     for(Map<String, AgeObjectWritable> omap : rangeObjects)
     {
@@ -1735,7 +1742,7 @@ public class AgeTab2AgeConverterImpl implements AgeTab2AgeConverter
    }
    if( atVal.matchPrefix( profDef.getClusterCascadeResolveScopePrefix() ) )
    {
-    scope =  ResolveScope.CASCADE_CLUSTER;
+    scope =  ResolveScope.CLUSTER_CASCADE;
    
     val = atVal.getValue().substring(profDef.getClusterCascadeResolveScopePrefix().length());
    }

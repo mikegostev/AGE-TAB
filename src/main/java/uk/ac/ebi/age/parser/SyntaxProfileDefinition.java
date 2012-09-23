@@ -55,11 +55,12 @@ public interface SyntaxProfileDefinition
  
  public String getModuleCascadeResolveScopePrefix();
 
+ public String getGlobalFallbackResolveScopePrefix();
+
  public String getDefaultResolveScopePrefix();
  
  public String getEscapeSequence();
 
  public String getDefaultEmbeddedObjectAttributeSeparator();
-
 
 }
