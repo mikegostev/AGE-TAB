@@ -21,5 +21,6 @@ public interface AgeResolver
 
  AgeObjectWritable getClusterScopeObject(String objId, String clusterId);
  AgeObjectWritable getGlobalScopeObject(String objId);
+ AgeObjectWritable getModuleScopeObject(String objId, String clusterId, String moduleId);
 
 }

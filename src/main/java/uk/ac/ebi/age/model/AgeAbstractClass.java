@@ -19,4 +19,7 @@ public interface AgeAbstractClass
  Collection<String> getAliases();
  
  SemanticModel getSemanticModel();
+ 
+ Collection<AttributeAttachmentRule> getAttributeAttachmentRules();
+ Collection<AttributeAttachmentRule> getAllAttributeAttachmentRules();
 }

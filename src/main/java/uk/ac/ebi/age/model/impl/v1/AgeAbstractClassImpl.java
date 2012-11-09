@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import uk.ac.ebi.age.model.AgeAbstractClass;
 import uk.ac.ebi.age.model.AgeAnnotation;
-import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AttributeAttachmentRule;
 import uk.ac.ebi.age.model.SemanticModel;
 import uk.ac.ebi.age.util.Collector;
@@ -66,6 +65,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
   annotations.remove(annt);
  }
  
+ @Override
  public Collection<AttributeAttachmentRule> getAttributeAttachmentRules()
  {
   return atatRules;
@@ -79,6 +79,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
   atatRules.add(atatRule);
  }
  
+ @Override
  public Collection<AttributeAttachmentRule> getAllAttributeAttachmentRules()
  {
   Collection<Collection<AttributeAttachmentRule>> allRest = new ArrayList<Collection<AttributeAttachmentRule>>(10);
@@ -88,7 +89,7 @@ abstract class AgeAbstractClassImpl extends AgeSemanticElementImpl implements  A
    @Override
    public Collection<AttributeAttachmentRule> get(AgeAbstractClass cls)
    {
-    Collection<AttributeAttachmentRule> restr = ((AgeClass)cls).getAttributeAttachmentRules();
+    Collection<AttributeAttachmentRule> restr = cls.getAttributeAttachmentRules();
     return restr==null||restr.size()==0?null:restr;
    }} );
   

@@ -49,11 +49,13 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
   
   DataModuleWritable dm = getMasterObject().getDataModule();
 
-  if( getTargetResolveScope() != ResolveScope.GLOBAL || getTargetResolveScope() != ResolveScope.GLOBAL_FALLBACK )
+  if( getTargetResolveScope() != ResolveScope.GLOBAL && getTargetResolveScope() != ResolveScope.GLOBAL_FALLBACK )
+  {
    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
 
-  if( tgt == null && getTargetResolveScope() == ResolveScope.CLUSTER )
-   return null;
+   if( tgt == null && getTargetResolveScope() == ResolveScope.CLUSTER )
+    return null;
+  }
   
   tgt = dm.getResolver().getGlobalScopeObject(objId);
   
@@ -63,7 +65,7 @@ public class AgeExternalObjectAttributeImpl extends AgeAttributeImpl implements 
     tgt=null;
    
    if( tgt == null )
-    tgt = dm.getResolver().getClusterScopeObject(objId, dm.getClusterId());
+    tgt = dm.getResolver().getModuleScopeObject(objId, dm.getClusterId(), dm.getId());
  
   }
   
